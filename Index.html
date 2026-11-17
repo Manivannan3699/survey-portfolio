@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manivannan K – Survey Programming Portfolio</title>
+<meta name="description" content="Live desktop and mobile demos of custom Decipher survey question types: grids, autosum, sliders, ranking, hybrid grids, patient charts, MaxDiff and more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef2f6;--surface:#ffffff;--surface-2:#f5f7fa;--row-alt:#f8fafc;
+  --text:#15233a;--muted:#55627a;--line:#d9e0e9;
+  --brand:#1f5fae;--brand-ink:#ffffff;--brand-soft:#e6eefa;
+  --accent:#b9770e;--accent-ink:#ffffff;
+  --err:#b3261e;--err-soft:#fbeceb;--ok:#16703f;--ok-soft:#e5f4eb;
+  --shadow:0 1px 2px rgba(21,35,58,.06),0 8px 24px rgba(21,35,58,.07);
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f151d;--surface:#18212c;--surface-2:#1e2935;--row-alt:#1b2530;
+    --text:#e6ecf3;--muted:#9ba8b9;--line:#2c3846;
+    --brand:#5e9bf0;--brand-ink:#0b1420;--brand-soft:#1c2c43;
+    --accent:#e2a63b;--accent-ink:#1a1206;
+    --err:#ff7a70;--err-soft:#3a1f1f;--ok:#56d08f;--ok-soft:#163222;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f151d;--surface:#18212c;--surface-2:#1e2935;--row-alt:#1b2530;
+  --text:#e6ecf3;--muted:#9ba8b9;--line:#2c3846;
+  --brand:#5e9bf0;--brand-ink:#0b1420;--brand-soft:#1c2c43;
+  --accent:#e2a63b;--accent-ink:#1a1206;
+  --err:#ff7a70;--err-soft:#3a1f1f;--ok:#56d08f;--ok-soft:#163222;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--brand)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+/* Hero */
+.hero{max-width:960px;margin:0 auto;padding:40px 16px 8px;display:grid;gap:28px;grid-template-columns:1.1fr 1fr;align-items:center}
+.hero h1{font-family:"Bricolage Grotesque","Source Sans 3",system-ui,sans-serif;font-weight:800;font-size:clamp(2.2rem,7vw,3.4rem);line-height:1.02;letter-spacing:-.02em;margin:0 0 8px}
+.role{font-size:1.15rem;color:var(--muted);margin:0 0 16px}
+.summary{margin:0 0 18px;max-width:34em}
+.skills{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.skills li{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.88rem}
+.hero .opt{text-decoration:none;color:var(--text)}
+@media (max-width:760px){.hero{grid-template-columns:1fr;padding-top:28px}}
+
+/* Sticky bar: global preview switch + chips */
+.navbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);display:flex;align-items:center;gap:10px;padding:10px 16px;margin-top:20px;border-bottom:1px solid var(--line)}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;white-space:nowrap;text-decoration:none;color:var(--text);border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.88rem;font-weight:600}
+.chip.active{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.seg{flex:none;display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:6px 12px;font-weight:600;font-size:.88rem;cursor:pointer;color:var(--muted)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink)}
+
+/* Demo blocks */
+main{padding-bottom:20px}
+.demo{max-width:900px;margin:44px auto 0;padding:0 16px}
+.demo h2{font-family:"Bricolage Grotesque","Source Sans 3",system-ui,sans-serif;font-weight:600;font-size:1.45rem;line-height:1.2;margin:0 0 8px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;padding:0;list-style:none}
+.tags li{font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 9px}
+.how{color:var(--muted);margin:0 0 14px;max-width:44em}
+.viewbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 10px}
+.scrollhint{display:none;font-size:.82rem;color:var(--muted)}
+@media (max-width:780px){.demo:has(.stage[data-mode="desktop"]) .scrollhint{display:inline}}
+
+/* Preview stage: desktop screen or phone frame */
+.stage{overflow-x:auto;padding:2px 0 10px}
+.frame{container:sv / inline-size;margin:0 auto}
+.stage[data-mode="desktop"] .frame{min-width:740px}
+.stage[data-mode="mobile"] .frame{width:390px;max-width:100%;padding:12px 10px 16px;border-radius:36px;background:#1c2431;box-shadow:var(--shadow)}
+.stage[data-mode="mobile"] .frame::before{content:"";display:block;width:64px;height:5px;border-radius:3px;background:#4a586c;margin:2px auto 12px}
+.stage[data-mode="mobile"] .survey{border-radius:22px;border-color:transparent}
+.stage[data-mode="mobile"] .sv-inner{padding:18px 14px 16px}
+
+/* Survey frame (platform look) */
+.survey{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}
+.sv-bar{height:6px;background:var(--surface-2)}
+.sv-bar span{display:block;height:100%;background:var(--brand)}
+.sv-inner{padding:22px 20px 20px}
+.err{background:var(--err-soft);color:var(--err);border-left:4px solid var(--err);padding:10px 12px;border-radius:6px;margin:0 0 16px;font-weight:600}
+.qtext{font-size:1.12rem;font-weight:700;margin:0 0 4px}
+.qinst{font-style:italic;color:var(--muted);font-size:.93rem;margin:0 0 16px}
+.sv-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px}
+.next{background:var(--brand);color:var(--brand-ink);border:0;border-radius:6px;padding:11px 24px;font-weight:700;cursor:pointer}
+.next:hover{filter:brightness(1.08)}
+.link{background:none;border:0;padding:4px 0;color:var(--muted);text-decoration:underline;cursor:pointer}
+.ok{margin-top:16px;background:var(--ok-soft);color:var(--ok);padding:10px 12px;border-radius:6px;font-size:.92rem;overflow-wrap:anywhere}
+.ok code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;color:var(--text)}
+
+/* Demo-only setting strip */
+.democtl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 16px;padding:8px 10px;border:1px dashed var(--accent);border-radius:8px;font-size:.85rem;color:var(--muted)}
+.mseg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.mseg button{border:0;background:var(--surface);padding:4px 10px;cursor:pointer;font-size:.85rem;color:var(--text)}
+.mseg button+button{border-left:1px solid var(--line)}
+.mseg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+
+/* Common inputs */
+select,input.txt{font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 9px;max-width:100%}
+input.num{width:76px;text-align:right;padding:7px 9px;border:1px solid var(--line);border-radius:6px;font:inherit;background:var(--surface);color:var(--text)}
+
+/* Answer rows */
+.opt{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--line);border-radius:8px;margin:0 0 8px;cursor:pointer;background:var(--surface);transition:background .15s,border-color .15s}
+.opt:hover{border-color:var(--brand)}
+.opt:has(input:checked){background:var(--brand-soft);border-color:var(--brand)}
+.opt input,.cell input,.chip-opt input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.opt .lbl{flex:1 1 auto}
+.fir{flex:none;width:20px;height:20px;border:2px solid var(--muted);border-radius:50%;display:inline-grid;place-items:center;background:var(--surface)}
+input[type=checkbox]+.fir{border-radius:5px}
+input:checked+.fir{border-color:var(--brand);background:var(--brand)}
+input[type=radio]:checked+.fir::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--brand-ink)}
+input[type=checkbox]:checked+.fir::after{content:"";width:5px;height:10px;border:solid var(--brand-ink);border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+input:focus-visible+.fir{outline:2px solid var(--brand);outline-offset:2px}
+.opt .oe{flex:1 1 180px;min-width:0;border:1px solid var(--line);border-radius:6px;padding:7px 9px;font:inherit;background:var(--surface);color:var(--text)}
+.opt .oe:disabled{opacity:.5}
+.opt.col{flex-direction:column;justify-content:flex-start;text-align:center;gap:6px;padding:10px 4px;margin:0;font-size:.85rem;line-height:1.2}
+.opt.col .lbl{flex:none}
+.opt.inline{display:inline-flex;margin:0;padding:6px 12px}
+.arrow{color:var(--brand);font-weight:700}
+.chips-in{display:flex;flex-wrap:wrap;gap:6px}
+.chip-opt{position:relative;display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.88rem;cursor:pointer;background:var(--surface)}
+.chip-opt:has(input:checked){background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.chip-opt:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:2px}
+
+/* Multi-column layout */
+.cols{display:grid;grid-template-columns:repeat(var(--cols,1),minmax(0,1fr));column-gap:10px}
+@container sv (max-width:600px){.cols{grid-template-columns:1fr}}
+
+/* Rating grid */
+.grid{display:grid;grid-template-columns:minmax(150px,1.7fr) repeat(5,minmax(0,1fr));border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.ghead,.grow,.gcells{display:contents}
+.ghead div{background:var(--brand);color:var(--brand-ink);font-size:.8rem;font-weight:600;text-align:center;padding:8px 4px;line-height:1.2;display:grid;place-items:center}
+.rlabel,.cell{padding:11px 8px;border-top:1px solid var(--line);background:var(--surface)}
+.rlabel{font-weight:600;padding-left:12px}
+.grow.alt .rlabel,.grow.alt .cell{background:var(--row-alt)}
+.grow.miss .rlabel,.grow.miss .cell{background:var(--err-soft)}
+.cell{display:grid;place-items:center;cursor:pointer;position:relative}
+.clbl{display:none}
+@container sv (max-width:600px){
+  .grid{display:block;border:0;overflow:visible}
+  .ghead{display:none}
+  .grow{display:block;border:1px solid var(--line);border-radius:8px;margin-bottom:10px;overflow:hidden;background:var(--surface)}
+  .grow.miss{border-color:var(--err);background:var(--err-soft)}
+  .grow .rlabel,.grow .cell,.grow.alt .rlabel,.grow.alt .cell,.grow.miss .rlabel,.grow.miss .cell{background:transparent;border-top:0}
+  .rlabel{padding:10px 12px 2px}
+  .gcells{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:4px 4px 8px}
+  .cell{gap:5px;padding:6px 2px;align-content:start}
+  .clbl{display:block;font-size:.7rem;text-align:center;color:var(--muted);line-height:1.15}
+}
+
+/* Autosum list */
+.as{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.as-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid var(--line)}
+.as-row:first-child{border-top:0}
+.as-in{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.as-total{font-weight:700;background:var(--surface-2)}
+.as-total .tv{min-width:76px;text-align:right;padding-right:22px}
+.as-total.bad .tv,.gs-tot.bad .tv{color:var(--err)}
+.as-total.good .tv,.gs-tot.good .tv{color:var(--ok)}
+
+/* Grid autosum (one DOM, re-ordered into cards on phones) */
+.gs{display:grid;grid-template-columns:minmax(140px,1.5fr) repeat(var(--gs-cols),minmax(140px,1fr));border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.gs-corner,.gs-ch{background:var(--brand);color:var(--brand-ink);font-weight:600;font-size:.85rem;padding:8px 10px;text-align:center}
+.gs-rh{font-weight:600;padding:10px 12px;border-top:1px solid var(--line);display:flex;align-items:center}
+.gs-cell{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 10px;border-top:1px solid var(--line)}
+.gs-trh,.gs-tot{background:var(--surface-2);font-weight:700}
+.gs .ml{display:none}
+@container sv (max-width:600px){
+  .gs{display:flex;flex-direction:column;border:0;border-radius:0;overflow:visible}
+  .gs.by-row>*{order:var(--or)}
+  .gs.by-col>*{order:var(--oc)}
+  .gs-corner{display:none}
+  .gs.by-row .gs-ch,.gs.by-col .gs-rh{display:none}
+  .gs.by-row .gs-rh,.gs.by-col .gs-ch{margin-top:12px;border:0;border-radius:8px 8px 0 0;background:var(--brand);color:var(--brand-ink);text-align:left;justify-content:flex-start;padding:9px 12px}
+  .gs-cell{justify-content:space-between;border:1px solid var(--line);border-bottom:0;background:var(--surface);padding:9px 12px}
+  .gs-tot{background:var(--surface-2)}
+  .gs.by-row .ml-c,.gs.by-col .ml-r{display:block;font-weight:600}
+  .gs.by-row .endr,.gs.by-col .endc{border-bottom:1px solid var(--line);border-radius:0 0 8px 8px}
+}
+
+/* Autosum with meter, previous column and card view (mani_custom style) */
+.survey{position:relative}
+.asx-nav{display:none;align-items:center;justify-content:center;gap:14px;margin:0 0 10px}
+.asx-nav button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:1.3rem;line-height:1;cursor:pointer;color:var(--brand)}
+.asx-nav button:disabled{opacity:.35;cursor:default}
+.asx-count{font-weight:700;min-width:64px;text-align:center}
+.asx-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+.asx{width:100%;border-collapse:collapse}
+.asx thead th{background:var(--brand);color:var(--brand-ink);font-size:.85rem;font-weight:600;padding:8px 10px;text-align:center}
+.asx thead th.asx-lg{background:var(--surface-2);color:var(--text);text-align:left}
+.asx tbody th,.asx tfoot th{text-align:left;padding:10px 12px;font-weight:600}
+.asx tbody th,.asx td{border-top:1px solid var(--line)}
+.asx td{padding:8px 10px;text-align:center}
+.asx td.ro{background:var(--surface-2)}
+.asx td .as-in{justify-content:center}
+.asx tfoot th,.asx tfoot td{border-top:2px solid var(--line);background:var(--surface-2);vertical-align:top}
+.mt{min-width:112px}
+.mt-line{white-space:nowrap}
+.mt-v{font-weight:700}
+.mt-t{color:var(--muted)}
+.mt-bar{height:4px;border-radius:2px;background:var(--line);margin:6px auto 4px;max-width:120px;overflow:hidden}
+.mt-bar span{display:block;height:100%;width:0;background:var(--muted);transition:width .2s}
+.mt-st{min-height:1.25em;font-size:.8rem;font-weight:600;color:var(--accent)}
+.mt[data-state="met"] .mt-v{color:var(--ok)}
+.mt[data-state="met"] .mt-line::after{content:" ✓";color:var(--ok);font-weight:700}
+.mt[data-state="met"] .mt-bar span{background:var(--ok)}
+.mt[data-state="broken"] .mt-v,.mt[data-state="broken"] .mt-st{color:var(--err)}
+.mt[data-state="broken"] .mt-bar span{background:var(--err);animation:pulse 1s ease-in-out infinite}
+.mt[data-state="ref"] .mt-bar span{opacity:.45}
+.asx tfoot td.bad{background:var(--err-soft)}
+@keyframes pulse{50%{opacity:.35}}
+@container sv (max-width:600px){
+  .asx-nav{display:flex}
+  .asx .off{display:none}
+}
+.zs{position:absolute;inset:0;z-index:5;background:rgba(10,18,30,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.zs[hidden]{display:none}
+.zs-box{background:var(--surface);border-radius:10px;box-shadow:var(--shadow);padding:18px;max-width:360px}
+.zs-title{font-weight:700;margin:0 0 6px}
+.zs-msg{margin:0 0 14px;color:var(--muted)}
+.zs-btns{display:flex;justify-content:flex-end;gap:16px;align-items:center}
+
+/* Grouped rows as a left column (leftgroup) */
+.lg-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+.lg{border-collapse:separate;border-spacing:0;width:100%}
+.lg th,.lg td{border-top:1px solid var(--line);background:var(--surface)}
+.lg thead th{background:var(--brand);color:var(--brand-ink);font-size:.85rem;font-weight:600;padding:8px;border-top:0}
+.lg thead th.lg-g,.lg thead th.lg-r{background:var(--surface-2);color:var(--text);text-align:left;padding:8px 12px}
+.lg th.lg-g{text-align:left;padding:10px 12px;font-weight:700;vertical-align:middle;border-right:1px solid var(--line);background:var(--surface-2);white-space:nowrap}
+.lg th.lg-r{text-align:left;padding:10px 12px;font-weight:600;white-space:nowrap}
+.lg .lg-c{width:52px;min-width:44px}
+.lg td{text-align:center;padding:0}
+.lg .cell{border:0;background:transparent;padding:11px 6px}
+.lg tr.miss td,.lg tr.miss th.lg-r{background:var(--err-soft)}
+@container sv (max-width:600px){
+  .lg th.lg-g{position:sticky;left:0;z-index:2;white-space:normal;width:92px;min-width:92px;max-width:92px}
+  .lg th.lg-r{position:sticky;left:92px;z-index:2;white-space:normal;min-width:100px;max-width:110px;box-shadow:2px 0 0 var(--line)}
+}
+
+/* Custom dropdown with phone bottom sheet */
+.dd-trig{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;max-width:420px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;text-align:left}
+.dd-trig[aria-expanded="true"]{border-color:var(--brand)}
+.dd-val{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dd-val.ph{color:var(--muted)}
+.dd-car{color:var(--muted)}
+.dd-panel{max-width:420px;margin-top:6px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow);padding:8px}
+.dd-list{max-height:290px;overflow:auto}
+.dd-list .opt{margin-bottom:6px}
+.dd-head,.dd-back{display:none}
+.dd-done{border:0;background:none;color:var(--brand);font-weight:700;cursor:pointer;padding:4px}
+@container sv (max-width:600px){
+  .dd-trig{max-width:none}
+  .dd-back:not([hidden]){display:block;position:absolute;inset:0;background:rgba(10,18,30,.45);z-index:6}
+  .dd-panel{position:absolute;left:0;right:0;bottom:0;margin:0;max-width:none;border:0;border-radius:16px 16px 0 0;z-index:7;padding:12px 14px 16px;max-height:78%;display:flex;flex-direction:column}
+  .dd-panel[hidden]{display:none}
+  .dd-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:10px}
+  .dd-list{max-height:none}
+}
+
+/* Tiled select */
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+@container sv (max-width:600px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{position:relative;display:block;border:2px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;background:var(--surface)}
+.tile img{display:block;width:100%;height:auto}
+.tile .cap{display:block;padding:8px 10px;font-weight:600;font-size:.92rem}
+.tile input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.tile .tick{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.92);border:2px solid #c6ced9;display:grid;place-items:center;font-weight:700;color:transparent;font-size:.85rem}
+.tile:has(input:checked){border-color:var(--brand);background:var(--brand-soft)}
+.tile:has(input:checked) .tick{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.tile:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:2px}
+
+/* Bipolar slider */
+.bp-prog{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:.88rem;color:var(--muted)}
+.bp-pbar{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bp-pbar span{display:block;height:100%;width:0;background:var(--brand);transition:width .2s}
+.bp-row{display:grid;grid-template-columns:minmax(90px,1fr) 3fr minmax(90px,1fr);grid-template-areas:"l s r";gap:14px;align-items:center;padding:12px 4px;border-top:1px solid var(--line)}
+.bp-row:first-of-type{border-top:0}
+.bp-l{grid-area:l;text-align:right;font-weight:600}
+.bp-r{grid-area:r;font-weight:600}
+.bp-row .sl{grid-area:s}
+.bp-row.miss{background:var(--err-soft)}
+@container sv (max-width:600px){
+  .bp-row{grid-template-columns:1fr 1fr;grid-template-areas:"l r" "s s";gap:4px 10px}
+  .bp-l{text-align:left}
+  .bp-r{text-align:right}
+}
+
+/* Select-then-rank hybrid */
+.hy.sr{grid-template-columns:minmax(140px,1.4fr) 150px minmax(170px,1fr)}
+.rk.idle{opacity:.6}
+.rk.idle .badge{border-style:dotted}
+.rk-none{margin-top:12px}
+.badge.sq{border-radius:6px}
+
+/* Drag rank: locked row */
+.so.locked{background:var(--surface-2)}
+.so.locked .handle{cursor:default;font-size:1rem}
+.so-lk{display:block;font-size:.78rem;color:var(--muted)}
+
+/* Open-end limit bar */
+.ta-bar{height:4px;border-radius:2px;background:var(--line);margin-top:6px;overflow:hidden}
+.ta-bar span{display:block;height:100%;width:0;background:var(--brand);transition:width .15s}
+.ta-bar[data-state="warn"] span{background:var(--accent)}
+.ta-bar[data-state="over"] span{background:var(--err)}
+.ta-bar[data-state="over"]+.oe-meta .chars{color:var(--err);font-weight:600}
+
+/* Closing call to action */
+.cta{max-width:900px;margin:60px auto 0;padding:0 16px}
+.cta .sv-inner{padding:26px 22px}
+.cta .qtext{font-family:"Bricolage Grotesque","Source Sans 3",system-ui,sans-serif;font-size:1.5rem;font-weight:600;line-height:1.2}
+.cta-body{margin:0 0 16px;max-width:40em}
+.promise{list-style:none;margin:0 0 22px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.promise li{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface-2);font-weight:600}
+.promise li::before{content:"✓ ";color:var(--ok)}
+.cta .next{display:inline-block;text-decoration:none}
+
+/* Slider */
+.sl-track{position:relative;padding-top:38px}
+.sl-val{position:absolute;top:0;transform:translateX(-50%);background:var(--brand);color:var(--brand-ink);font-weight:700;padding:2px 10px;border-radius:6px;font-size:.9rem;white-space:nowrap}
+.untouched .sl-val{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.sl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:999px;margin:0;background:linear-gradient(to right,var(--brand) var(--p,50%),var(--line) var(--p,50%));cursor:pointer}
+.sl.untouched input[type=range]{background:var(--line)}
+.sl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--surface);border:3px solid var(--brand);box-shadow:var(--shadow)}
+.sl input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--surface);border:3px solid var(--brand)}
+.sl.untouched input[type=range]::-webkit-slider-thumb{border-color:var(--muted)}
+.sl.untouched input[type=range]::-moz-range-thumb{border-color:var(--muted)}
+.sl-ticks{display:flex;justify-content:space-between;padding:8px 6px 0;font-size:.8rem;color:var(--muted)}
+.sl-ticks span{width:14px;text-align:center}
+.sl-anchors{display:flex;justify-content:space-between;gap:10px;font-size:.88rem;font-weight:600;margin-top:4px}
+
+/* Slider grid */
+.sg{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.sg-head,.sg-row{display:grid;grid-template-columns:minmax(140px,1fr) 2fr;gap:18px;align-items:center;padding:10px 16px}
+.sg-head{background:var(--brand);color:var(--brand-ink);font-size:.85rem;padding:8px 16px}
+.sg-head .sl-anchors{margin:0}
+.sg-row{border-top:1px solid var(--line)}
+.sg-row.alt{background:var(--row-alt)}
+.sg-row.miss{background:var(--err-soft)}
+.sg-label{font-weight:600}
+.sg-mob{display:none}
+@container sv (max-width:600px){
+  .sg-head{display:none}
+  .sg-row{grid-template-columns:1fr;gap:2px;padding:12px 14px}
+  .sg-mob{display:flex;font-size:.8rem;color:var(--muted)}
+}
+
+/* Click rank */
+.rk{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:11px 14px;border:1px solid var(--line);border-radius:8px;margin:0 0 8px;background:var(--surface);cursor:pointer}
+.rk:hover{border-color:var(--brand)}
+.rk .badge{flex:none;width:28px;height:28px;border-radius:50%;border:2px dashed var(--line);display:grid;place-items:center;font-weight:700}
+.rk.on{background:var(--brand-soft);border-color:var(--brand)}
+.rk.on .badge{background:var(--brand);border:0;color:var(--brand-ink)}
+.hint{margin:4px 0 0;font-size:.9rem;color:var(--accent);min-height:1.3em}
+
+/* Drag rank */
+.so-list{list-style:none;margin:0;padding:0}
+.so{display:flex;align-items:center;gap:10px;padding:6px 6px 6px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:var(--surface);user-select:none;-webkit-user-select:none}
+.so.dragging{border-color:var(--brand);background:var(--brand-soft);box-shadow:var(--shadow);position:relative;z-index:2}
+.so-n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-weight:700}
+.so-t{flex:1}
+.so-btns{display:flex;gap:4px}
+.so-btns button{width:32px;height:32px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2);cursor:pointer;font-size:.72rem;color:var(--muted)}
+.handle{flex:none;width:40px;height:40px;display:grid;place-items:center;cursor:grab;touch-action:none;color:var(--muted);font-size:1.3rem;border-radius:6px}
+.handle:active{cursor:grabbing}
+
+/* Hybrid grid */
+.hy{display:grid;grid-template-columns:minmax(120px,1fr) minmax(220px,2fr) 120px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.hy-h{background:var(--brand);color:var(--brand-ink);font-weight:600;font-size:.85rem;padding:8px 10px;text-align:center}
+.hy-row{display:contents}
+.hy-l,.hy-a,.hy-dk{padding:10px;border-top:1px solid var(--line);background:var(--surface);display:flex;align-items:center}
+.hy-l{font-weight:600;padding-left:12px}
+.hy-dk{justify-content:center}
+.hy-row.alt>div{background:var(--row-alt)}
+.hy-row.miss>div{background:var(--err-soft)}
+.hy-a .sl{width:100%}
+.hy-a .txt,.hy-a select{width:100%}
+.hy-a .rk{margin:0}
+.hy-dk .lbl{display:none}
+.hy-dk .opt.inline{border:0;background:transparent;padding:4px}
+@container sv (max-width:600px){
+  .hy{display:block;border:0;overflow:visible}
+  .hy-h{display:none}
+  .hy-row{display:block;border:1px solid var(--line);border-radius:8px;margin-bottom:10px;overflow:hidden}
+  .hy-row.miss{border-color:var(--err)}
+  .hy-l,.hy-a,.hy-dk{border-top:0;padding:8px 12px}
+  .hy-l{padding-top:12px}
+  .hy-dk{justify-content:flex-start;padding-bottom:12px}
+  .hy-dk .lbl{display:inline}
+  .hy-dk .opt.inline{border:1px solid var(--line);padding:6px 12px}
+}
+
+/* Patient chart (one DOM: question rows on desktop, patient cards on phones) */
+.pc-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+.pc{display:grid;grid-template-columns:minmax(150px,1fr) repeat(var(--pc-n),minmax(170px,1.2fr));min-width:660px}
+.pc-corner,.pc-ph{background:var(--brand);color:var(--brand-ink);font-weight:700;padding:9px 10px;text-align:center}
+.pc-corner{text-align:left;font-weight:600;font-size:.85rem}
+.pc-ql{font-weight:600;padding:10px 12px;border-top:1px solid var(--line);background:var(--surface-2);font-size:.95rem;display:flex;align-items:center}
+.pc-c{padding:8px 10px;border-top:1px solid var(--line);border-left:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}
+.pc-c.miss{background:var(--err-soft)}
+.pc .ml{display:none}
+.pc select,.pc input.txt{width:100%}
+.my{display:flex;gap:6px}
+.my select{flex:1;min-width:0}
+@container sv (max-width:600px){
+  .pc-wrap{border:0;overflow:visible;border-radius:0}
+  .pc{display:flex;flex-direction:column;min-width:0}
+  .pc>*{order:var(--om)}
+  .pc-corner,.pc-ql{display:none}
+  .pc-ph{margin-top:12px;border-radius:8px 8px 0 0;text-align:left;padding:9px 12px}
+  .pc-c{border:1px solid var(--line);border-bottom:0;padding:10px 12px}
+  .pc-c.endc{border-bottom:1px solid var(--line);border-radius:0 0 8px 8px}
+  .pc .ml{display:block;font-weight:600;font-size:.9rem;margin-bottom:6px}
+}
+
+/* Card sort */
+.cs-count{text-align:center;color:var(--muted);font-size:.9rem}
+.cs-stage{display:grid;place-items:center;padding:10px 0 16px}
+.cs-card{width:min(100%,340px);min-height:118px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);box-shadow:var(--shadow);display:grid;place-items:center;text-align:center;padding:18px;font-weight:700;font-size:1.1rem;animation:pop .25s ease-out}
+.cs-card.done{color:var(--ok)}
+@keyframes pop{from{transform:translateY(8px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.cs-buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bucket{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:12px 6px;cursor:pointer;font-weight:600;font-size:.92rem;line-height:1.2}
+.bucket:hover:not(:disabled){border-color:var(--brand);background:var(--brand-soft)}
+.bucket:disabled{cursor:default;opacity:.75}
+.bucket small{display:block;margin-top:4px;color:var(--muted);font-weight:400}
+.cs-undo{display:block;margin:10px auto 0}
+
+/* MaxDiff */
+.md-set{color:var(--muted);font-size:.9rem;margin-bottom:8px}
+.md-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+.md{width:100%;border-collapse:collapse}
+.md th{background:var(--brand);color:var(--brand-ink);font-size:.85rem;padding:8px;font-weight:600}
+.md td{border-top:1px solid var(--line);padding:0}
+.md tr:nth-child(even) td{background:var(--row-alt)}
+.md td.it{padding:11px 8px;text-align:center;font-weight:600}
+.md td.c{width:76px}
+.md .cell{border:0;background:transparent;padding:12px}
+
+/* Choice cards */
+.cc-row{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;margin-bottom:10px}
+.ccard{flex:1 0 190px;scroll-snap-align:start;border:2px solid var(--line);border-radius:10px;background:var(--surface);padding:0;cursor:pointer;text-align:left;overflow:hidden}
+.ccard h3{margin:0;padding:10px 12px;background:var(--surface-2);font-size:1rem}
+.ccard dl{margin:0;padding:4px 12px 12px}
+.ccard dt{font-size:.78rem;color:var(--muted);margin-top:8px}
+.ccard dd{margin:0;font-weight:600}
+.ccard .pick{display:block;margin:0 12px 12px;text-align:center;border:1px solid var(--brand);color:var(--brand);border-radius:6px;padding:6px;font-weight:700;font-size:.9rem}
+.ccard.sel{border-color:var(--brand);background:var(--brand-soft)}
+.ccard.sel .pick{background:var(--brand);color:var(--brand-ink)}
+
+/* Image popup */
+.thumbs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+a.zoomable{position:relative;display:block;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+a.zoomable img{display:block;width:100%;height:auto}
+.zm{position:absolute;right:8px;bottom:8px;background:rgba(10,18,30,.72);color:#fff;font-size:.78rem;padding:3px 9px;border-radius:999px}
+a.zoomable.seen .zm{background:#16703f}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.lb{position:fixed;inset:0;z-index:100;background:rgba(5,10,18,.9);display:none;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 56px) 12px calc(env(safe-area-inset-bottom,0px) + 56px);touch-action:pan-y}
+.lb.open{display:flex}
+.lb img{max-width:min(100%,900px);max-height:100%;border-radius:8px;user-select:none}
+.lb button{position:absolute;background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:50%;width:44px;height:44px;font-size:1.5rem;line-height:1;cursor:pointer}
+.lb-close{top:calc(env(safe-area-inset-top,0px) + 10px);right:12px}
+.lb-prev{left:10px;top:50%;transform:translateY(-50%)}
+.lb-next{right:10px;top:50%;transform:translateY(-50%)}
+.lb-cap{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);left:0;right:0;text-align:center;color:#fff;font-size:.95rem}
+
+/* Open-end */
+textarea{display:block;width:100%;min-height:116px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:inherit;background:var(--surface);color:var(--text);resize:vertical}
+.oe-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:.88rem;color:var(--muted)}
+.cc.met{color:var(--ok);font-weight:600}
+
+footer{max-width:900px;margin:48px auto 0;padding:20px 16px 36px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+footer p{margin:0 0 6px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div>
+    <h1>Manivannan K</h1>
+    <p class="role">Senior survey programmer for Decipher (Forsta)</p>
+    <p class="summary">I program market research surveys end to end: custom question types, skip logic and quotas, answer validation, and layouts built for both desktop and phone. Every question on this page is live. Switch any of them between desktop and mobile view, answer it, and see the data it records.</p>
+    <ul class="skills">
+      <li>Decipher / Forsta XML</li>
+      <li>Custom JS, CSS and HTML question types</li>
+      <li>Desktop and mobile layouts</li>
+      <li>Logic, piping and quotas</li>
+      <li>Multi-country setups</li>
+      <li>Survey QC and testing</li>
+    </ul>
+  </div>
+  <div class="survey" aria-label="Start here">
+    <div class="sv-bar"><span style="width:6%"></span></div>
+    <div class="sv-inner">
+      <p class="qtext">What would you like to do first?</p>
+      <p class="qinst">Select one.</p>
+      <a class="opt" href="#single"><span class="fir" aria-hidden="true"></span><span class="lbl">Try the live question demos</span><span class="arrow" aria-hidden="true">›</span></a>
+      <a class="opt" href="#patient"><span class="fir" aria-hidden="true"></span><span class="lbl">See the patient chart grid</span><span class="arrow" aria-hidden="true">›</span></a>
+      <a class="opt" href="#contact"><span class="fir" aria-hidden="true"></span><span class="lbl">Tell me what your survey needs</span><span class="arrow" aria-hidden="true">›</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="navbar">
+  <div class="seg" id="gmode" role="group" aria-label="Preview all questions as">
+    <button type="button" data-mode="desktop">Desktop</button><button type="button" data-mode="mobile">Mobile</button>
+  </div>
+  <nav class="chips" id="nav" aria-label="Question types"></nav>
+</div>
+
+<main id="demos"></main>
+
+<section class="cta" id="contact">
+  <div class="survey"><div class="sv-bar"><span style="width:100%"></span></div><div class="sv-inner">
+    <p class="qtext">What kind of customization does your survey need?</p>
+    <p class="qinst">Any of the question types above, or something completely new.</p>
+    <p class="cta-body">Send me your questionnaire or describe what you need. I’ll program it to your exact requirements, test every path on desktop and mobile, and check the data before launch, so you get 100% quality data.</p>
+    <ul class="promise">
+      <li>Built to your exact requirements</li>
+      <li>Tested on desktop and mobile</li>
+      <li>Multi-language ready</li>
+      <li>100% quality data, checked before launch</li>
+    </ul>
+    <a class="next" href="https://www.linkedin.com/in/manivannan-kuppusamy" target="_blank" rel="noopener">Message me on LinkedIn »</a>
+  </div></div>
+</section>
+
+<footer>
+  <p>All questions and data on this page are fictional and were built from scratch for this portfolio. They show how these question types look and behave in live Decipher (Forsta) studies; no client or company material is included.</p>
+  <p>© 2026 Manivannan K</p>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer" aria-hidden="true">
+  <button class="lb-close" type="button" aria-label="Close">✕</button>
+  <button class="lb-prev" type="button" aria-label="Previous image">‹</button>
+  <img alt="">
+  <button class="lb-next" type="button" aria-label="Next image">›</button>
+  <div class="lb-cap"></div>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function optRow(type,name,value,label,extra,cls){
+  return `<label class="opt${cls?' '+cls:''}"><input type="${type}" name="${name}" value="${value}"><span class="fir" aria-hidden="true"></span><span class="lbl">${label}</span>${extra||''}</label>`;
+}
+function ctl(label,opts,cur,key){
+  return `<div class="democtl" data-key="${key}"><span>${label}:</span><div class="mseg">${opts.map(([v,t])=>`<button type="button" data-v="${v}" aria-pressed="${v===cur}">${t}</button>`).join('')}</div></div>`;
+}
+function onCtl(b,key,fn){
+  $(`.democtl[data-key="${key}"]`,b).addEventListener('click',e=>{const x=e.target.closest('button');if(!x)return;
+    $$('button',x.parentNode).forEach(y=>y.setAttribute('aria-pressed',y===x));fn(x.dataset.v);});
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function conceptSVG(name,c1,c2){
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="${c1}"/><circle cx="330" cy="60" r="90" fill="${c2}" opacity=".25"/><rect x="140" y="40" width="120" height="200" rx="16" fill="#fff" opacity=".95"/><rect x="156" y="60" width="88" height="28" rx="6" fill="${c2}"/><circle cx="200" cy="150" r="36" fill="${c2}" opacity=".85"/><rect x="164" y="204" width="72" height="10" rx="5" fill="${c1}" opacity=".6"/><text x="200" y="278" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#fff" text-anchor="middle">${name}</text></svg>`);
+}
+function sliderHTML(aria){
+  return `<div class="sl untouched"><div class="sl-track"><output class="sl-val">Move the slider</output><input type="range" min="0" max="10" step="1" value="5" aria-label="${aria}"></div><div class="sl-ticks">${[...Array(11).keys()].map(n=>`<span>${n}</span>`).join('')}</div></div>`;
+}
+function wireSlider(w,onTouch){
+  const r=$('input',w),o=$('output',w),mn=+r.min,mx=+r.max,center=w.dataset.fill==='center',def=r.value;
+  const fmt=v=>center&&v>0?'+'+v:String(v);
+  const upd=()=>{const p=(r.value-mn)/(mx-mn)*100;o.style.left=`calc(${p}% + ${13-p*0.26}px)`;
+    if(center){const a=Math.min(p,50),z=Math.max(p,50);r.style.background=w.classList.contains('untouched')?'':`linear-gradient(to right,var(--line) ${a}%,var(--brand) ${a}%,var(--brand) ${z}%,var(--line) ${z}%)`;}
+    else r.style.setProperty('--p',p+'%');};
+  const touch=()=>{w.classList.remove('untouched');o.textContent=fmt(+r.value);upd();if(onTouch)onTouch();};
+  upd();
+  r.addEventListener('input',touch);
+  r.addEventListener('pointerdown',touch);
+  return{get touched(){return !w.classList.contains('untouched');},get value(){return r.value;},
+    reset(){w.classList.add('untouched');r.value=def;o.textContent='Move the slider';upd();}};
+}
+function tileSVG(name,c1,c2){
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 190"><rect width="300" height="190" fill="${c1}"/><path d="M110 30h80l12 130H98z" fill="#fff" opacity=".93"/><rect x="112" y="48" width="76" height="18" rx="4" fill="${c2}"/><circle cx="150" cy="108" r="24" fill="${c2}" opacity=".85"/><circle cx="240" cy="40" r="46" fill="${c2}" opacity=".22"/></svg>`);
+}
+
+const DEMOS=[
+{id:'single',short:'Single select',title:'Single select with “Other, specify”',
+ tags:['Radio','Open-end on a row','Conditional validation'],
+ how:'A standard radio question with a text box on the “Other” row. The box unlocks only when “Other” is picked, and it’s required only then.',
+ q:'Which of these best describes how often you drink coffee?',inst:'Please select one.',
+ build(b){
+  const o=['Every day','A few times a week','About once a week','Less than once a week'];
+  b.innerHTML=o.map((t,k)=>optRow('radio','q1',k+1,t)).join('')+optRow('radio','q1',99,'Other (please specify)','<input class="oe" type="text" disabled placeholder="Please specify" aria-label="Other, please specify">');
+  const oe=$('.oe',b);
+  b.addEventListener('change',e=>{if(e.target.name!=='q1')return;const on=e.target.value==='99';oe.disabled=!on;if(on)oe.focus();else oe.value='';});
+  return()=>{const v=$('input[name=q1]:checked',b);
+   if(!v)return{error:'Please select an answer.'};
+   if(v.value==='99'&&!oe.value.trim())return{error:'Please specify your “Other” answer.'};
+   return{data:`Q1=${v.value}`+(v.value==='99'?`; Q1r99oe="${oe.value.trim()}"`:'')};};
+ }},
+{id:'multi',short:'Multi select',title:'Multi select with an exclusive “None”',
+ tags:['Checkbox','Randomized rows','Exclusive option'],
+ how:'Rows are shuffled for each respondent while “None of these” stays anchored at the bottom. Ticking “None” clears every other answer, and ticking any other answer clears “None”.',
+ q:'Which of these apps have you used in the past month?',inst:'Select all that apply. Row order is randomized; tap Reset to see it change.',
+ build(b){
+  const items=[['r1','Video streaming'],['r2','Music streaming'],['r3','Food delivery'],['r4','Ride-hailing'],['r5','Online grocery'],['r6','Digital payments']];
+  b.innerHTML=shuffle(items).map(([v,t])=>optRow('checkbox','q2',v,t)).join('')+optRow('checkbox','q2','r99','None of these');
+  b.addEventListener('change',e=>{const t=e.target;if(!t.checked)return;
+   $$('input[name=q2]',b).forEach(i=>{if(i!==t&&(t.value==='r99'||i.value==='r99'))i.checked=false;});});
+  return()=>{const c=$$('input[name=q2]:checked',b);
+   if(!c.length)return{error:'Please select at least one answer.'};
+   return{data:c.map(i=>`Q2${i.value}=1`).join('; ')};};
+ }},
+{id:'columns',short:'Column layouts',title:'Single and multi-column answer layouts',
+ tags:['Layout','1, 2 or 3 columns','Single column on phones'],
+ how:'A long answer list can be split into 2 or 3 columns to cut scrolling on large screens. On phones it always falls back to one column so nothing gets cramped. Use the setting strip to switch the column count.',
+ q:'Which of these hobbies do you enjoy?',inst:'Select all that apply.',
+ build(b){
+  const items=['Reading','Cooking','Gardening','Gaming','Cycling','Photography','Music','Travel','Yoga','Painting','Fishing','Board games'];
+  b.innerHTML=ctl('Columns on desktop',[['1','1 column'],['2','2 columns'],['3','3 columns']],'3','cols')+`<div class="cols" style="--cols:3">${items.map((t,i)=>optRow('checkbox','q3',`r${i+1}`,t)).join('')}</div>`;
+  const cols=$('.cols',b);
+  onCtl(b,'cols',v=>cols.style.setProperty('--cols',v));
+  return()=>{const c=$$('input[name=q3]:checked',b);
+   if(!c.length)return{error:'Please select at least one answer.'};
+   return{data:c.map(i=>`Q3${i.value}=1`).join('; ')};};
+ }},
+{id:'dropdown',short:'Dropdown',title:'Custom dropdown with a phone bottom sheet',
+ tags:['Single or multi select','Other-specify inside the list','Exclusive “None”','Bottom sheet on phones'],
+ how:'A styled dropdown that works for single and multi select. On desktop the list opens under the button; on phones it slides up as a bottom sheet with a Done button. The “Other” text box opens inside its own row, and “None of these” clears every other choice. Switch the type in the setting strip.',
+ q:'',inst:'',
+ build(b){
+  const opts=['Brand A','Brand B','Brand C','Brand D','Brand E'];
+  const sv=b.closest('.survey'),qt=$('.qtext',sv),qi=$('.qinst',sv);let multi=false;
+  b.innerHTML=ctl('Question type',[['single','Single select'],['multi','Multi select']],'single','ddt')+'<div class="dd"></div>';
+  const dd=$('.dd',b);
+  const el=()=>({trig:$('.dd-trig',dd),panel:$('.dd-panel',dd),back:$('.dd-back',dd),val:$('.dd-val',dd),oe:$('.oe',dd)});
+  const label=()=>{const c=$$('input[name=dd]:checked',dd),e=el();
+   const names=c.map(i=>i.value==='r98'?`Other${e.oe.value.trim()?': '+e.oe.value.trim():''}`:i.closest('.opt').querySelector('.lbl').textContent);
+   e.val.classList.toggle('ph',!names.length);
+   e.val.textContent=!names.length?'Select…':multi&&names.length>1?`${names.length} selected: ${names.join(', ')}`:names[0];};
+  const open=()=>{const e=el();e.panel.hidden=false;e.back.hidden=false;e.trig.setAttribute('aria-expanded','true');};
+  const close=()=>{const e=el();e.panel.hidden=true;e.back.hidden=true;e.trig.setAttribute('aria-expanded','false');};
+  const draw=()=>{qt.textContent=multi?'Which of these brands have you used in the past year?':'Which brand do you use most often?';
+   qi.textContent=multi?'Select all that apply.':'Please select one.';
+   const ty=multi?'checkbox':'radio';
+   dd.innerHTML=`<button type="button" class="dd-trig" aria-expanded="false" aria-haspopup="listbox"><span class="dd-val ph">Select…</span><span class="dd-car" aria-hidden="true">▾</span></button><div class="dd-back" hidden></div><div class="dd-panel" hidden><div class="dd-head"><span>${multi?'Select all that apply':'Select one'}</span><button type="button" class="dd-done">Done</button></div><div class="dd-list">${opts.map((o,i)=>optRow(ty,'dd',`r${i+1}`,o)).join('')}${optRow(ty,'dd','r98','Other (please specify)','<input class="oe" type="text" placeholder="Please specify" aria-label="Other, please specify" hidden>')}${multi?optRow('checkbox','dd','r99','None of these'):''}</div></div>`;};
+  draw();
+  onCtl(b,'ddt',v=>{multi=v==='multi';draw();});
+  dd.addEventListener('click',e=>{if(e.target.closest('.dd-trig')){el().panel.hidden?open():close();}
+   if(e.target.closest('.dd-done')||e.target.classList.contains('dd-back'))close();});
+  dd.addEventListener('change',e=>{const t=e.target;if(t.name!=='dd')return;const o=el().oe;
+   if(multi&&t.checked)$$('input[name=dd]',dd).forEach(i=>{if(i!==t&&(t.value==='r99'||i.value==='r99'))i.checked=false;});
+   const other=$('input[name=dd][value=r98]',dd).checked;o.hidden=!other;if(!other)o.value='';else if(t.value==='r98')o.focus();
+   label();if(!multi&&t.value!=='r98')close();});
+  dd.addEventListener('input',e=>{if(e.target.classList.contains('oe'))label();});
+  const onDoc=e=>{if(!dd.isConnected){document.removeEventListener('click',onDoc);return;}if(!el().panel.hidden&&!dd.contains(e.target)&&!e.target.closest('.democtl'))close();};
+  document.addEventListener('click',onDoc);
+  return()=>{const c=$$('input[name=dd]:checked',dd);
+   if(!c.length)return{error:multi?'Please select at least one answer.':'Please select an answer.'};
+   const oe=el().oe;if(c.some(i=>i.value==='r98')&&!oe.value.trim()){open();return{error:'Please specify your “Other” answer.'};}
+   close();
+   return{data:multi?c.map(i=>`Q4${i.value}=1`).join('; ')+(oe.value.trim()?`; Q4r98oe="${oe.value.trim()}"`:''):`Q4=${c[0].value.slice(1)}`+(c[0].value==='r98'?`; Q4r98oe="${oe.value.trim()}"`:'')};};
+ }},
+{id:'tiled',short:'Image tiles',title:'Tiled select with images',
+ tags:['Image tiles','Multi select','Exclusive text row','2 or 3 per row'],
+ how:'Answers with an image show as tiles, three per row on desktop and two on phones; answers without one show as full-width text rows. Tapping a tile ticks it, and “None of these” clears every tile.',
+ q:'Which of these snacks would you consider buying?',inst:'Select all that apply.',
+ build(b){
+  const t=[['Sea salt chips','#2f6f9f','#f2b134'],['Spicy nuts','#a33b2f','#f6c453'],['Fruit bar','#3d8b4f','#f08a5d'],['Dark chocolate','#4a2f27','#d9a05b'],['Rice crackers','#7b6f5c','#e9e2d0'],['Trail mix','#6d3c8f','#3ec1a6']];
+  b.innerHTML=`<div class="tiles">${t.map(([n,c1,c2],i)=>`<label class="tile"><input type="checkbox" name="tl" value="r${i+1}"><img src="${tileSVG(n,c1,c2)}" alt="${n} pack"><span class="tick" aria-hidden="true">✓</span><span class="cap">${n}</span></label>`).join('')}</div>`+optRow('checkbox','tl','r99','None of these');
+  b.addEventListener('change',e=>{const x=e.target;if(!x.checked)return;$$('input[name=tl]',b).forEach(i=>{if(i!==x&&(x.value==='r99'||i.value==='r99'))i.checked=false;});});
+  return()=>{const c=$$('input[name=tl]:checked',b);if(!c.length)return{error:'Please select at least one answer.'};return{data:c.map(i=>`Q5${i.value}=1`).join('; ')};};
+ }},
+{id:'grid',short:'Rating grid',title:'Rating grid: table on desktop, cards on phones',
+ tags:['Single-select grid','Row-level errors','Responsive'],
+ how:'One radio grid. On desktop it’s a classic table with a header row; on phones each statement becomes its own card with labelled answer buttons. Unanswered rows are highlighted so respondents see exactly what’s missing.',
+ q:'How satisfied are you with each of the following?',inst:'Please select one answer for each row.',
+ build(b){
+  const rows=['Ease of ordering','Delivery speed','Packaging quality','Customer support'];
+  const cols=['Very dissatisfied','Dissatisfied','Neutral','Satisfied','Very satisfied'];
+  b.innerHTML=`<div class="grid"><div class="ghead"><div></div>${cols.map(c=>`<div>${c}</div>`).join('')}</div>${rows.map((r,i)=>`<div class="grow${i%2?' alt':''}" data-r="r${i+1}"><div class="rlabel">${r}</div><div class="gcells">${cols.map((c,k)=>`<label class="cell"><input type="radio" name="q4r${i+1}" value="${k+1}" aria-label="${r}: ${c}"><span class="fir" aria-hidden="true"></span><span class="clbl">${c}</span></label>`).join('')}</div></div>`).join('')}</div>`;
+  b.addEventListener('change',e=>{const g=e.target.closest('.grow');if(g)g.classList.remove('miss');});
+  return()=>{let miss=0;const d=[];
+   $$('.grow',b).forEach(g=>{const v=$('input:checked',g);g.classList.toggle('miss',!v);if(!v)miss++;else d.push(`Q4${g.dataset.r}=${v.value}`);});
+   return miss?{error:`Please answer the highlighted ${miss>1?'rows':'row'}.`}:{data:d.join('; ')};};
+ }},
+{id:'leftgroup',short:'Grouped rows',title:'Grouped rows shown as a left column',
+ tags:['Row groups','Column headers','Narrow scale columns','Frozen columns on phones'],
+ how:'Row groups appear once in their own first column, spanning all their rows, instead of a full-width grey bar above each group. Headers sit above both the group and the row-label columns, and the scale columns are kept narrow and even. On phones the group and label columns stay frozen while the scale scrolls sideways.',
+ q:'How likely are you to prescribe each of these products in the next 6 months?',inst:'1 = Not at all likely, 5 = Extremely likely.',
+ build(b){
+  const groups=[['Biologics',['Product A','Product B','Product C']],['Oral therapies',['Product D','Product E']]];
+  const sc=[1,2,3,4,5];let n=0;
+  let h=`<div class="lg-wrap"><table class="lg"><thead><tr><th class="lg-g">Category</th><th class="lg-r">Product</th>${sc.map(v=>`<th class="lg-c">${v}</th>`).join('')}</tr></thead><tbody>`;
+  groups.forEach(([g,items])=>items.forEach((p,i)=>{n++;h+=`<tr data-r="${n}">${i===0?`<th class="lg-g" rowspan="${items.length}" scope="rowgroup">${g}</th>`:''}<th class="lg-r" scope="row">${p}</th>${sc.map(v=>`<td><label class="cell"><input type="radio" name="lg${n}" value="${v}" aria-label="${p}: ${v}"><span class="fir" aria-hidden="true"></span></label></td>`).join('')}</tr>`;}));
+  b.innerHTML=h+'</tbody></table></div>';
+  b.addEventListener('change',e=>{const tr=e.target.closest('tr');if(tr)tr.classList.remove('miss');});
+  return()=>{let miss=0;const d=[];
+   $$('tbody tr',b).forEach(tr=>{const v=$('input:checked',tr);tr.classList.toggle('miss',!v);if(!v)miss++;else d.push(`Q4Br${tr.dataset.r}=${v.value}`);});
+   return miss?{error:`Please answer the highlighted ${miss>1?'rows':'row'}.`}:{data:d.join('; ')};};
+ }},
+{id:'autosum',short:'Autosum',title:'Autosum: numeric list with a live total',
+ tags:['Number question','Running total','Multi-language text'],
+ how:'A number question with a running total that turns green at exactly 100%. Blank boxes are never pre-filled with 0, so the data keeps a true blank. All respondent-facing text is read from a language object filled per country.',
+ q:'Thinking about your last 100 grocery purchases, roughly what percentage came from each place?',inst:'Your answers must add up to 100%.',
+ build(b){
+  var lang=window.AutosumLang||{};
+  var txtTotal=lang.total||'Total';
+  var txtErr=lang.mustEqual||'Your answers must add up to 100%. Current total:';
+  const rows=['Supermarket','Neighbourhood store','Online or app','Other'];
+  b.innerHTML=`<div class="as">${rows.map((r,i)=>`<div class="as-row"><label for="q5r${i+1}">${r}</label><span class="as-in"><input class="num" id="q5r${i+1}" inputmode="numeric" maxlength="3" autocomplete="off"><span>%</span></span></div>`).join('')}<div class="as-row as-total bad"><span>${txtTotal}</span><span class="tv">0%</span></div></div>`;
+  const ins=$$('input.num',b),tot=$('.as-total',b);
+  const sum=()=>ins.reduce((s,i)=>s+(+i.value||0),0);
+  b.addEventListener('input',e=>{if(e.target.classList.contains('num'))e.target.value=e.target.value.replace(/\D/g,'').slice(0,3);
+   const s=sum();$('.tv',tot).textContent=s+'%';tot.classList.toggle('good',s===100);tot.classList.toggle('bad',s!==100);});
+  return()=>{const s=sum();if(s!==100)return{error:`${txtErr} ${s}%`};
+   return{data:ins.map((i,k)=>`Q5r${k+1}=${i.value===''?'blank':i.value}`).join('; ')};};
+ }},
+{id:'gridsum',short:'Grid autosum',title:'Grid autosum: table on desktop, card view on phones',
+ tags:['Multi-column autosum','Column totals','Row or column cards'],
+ how:'A numeric grid where every column must total 100%. Desktop shows a table with a totals row. On phones it becomes a card view, stacked either by row (one card per brand) or by column (one card per time period, with its own total). Switch between the two in the setting strip and preview in Mobile.',
+ q:'What share of your purchases in this category goes to each brand?',inst:'Each column must add up to 100%.',
+ build(b){
+  var lang=window.AutosumLang||{};
+  var txtTotal=lang.total||'Total';
+  var txtMust=lang.mustEqual||'Each column must add up to 100%.';
+  const rows=['Brand A','Brand B','Brand C','Other brands'],cols=['Last 3 months','Next 3 months (expected)'];
+  const R=rows.length,C=cols.length;
+  let h=ctl('Phone card view',[['row','Cards by row'],['col','Cards by column']],'row','stack')+`<div class="gs by-row" style="--gs-cols:${C}"><div class="gs-corner"></div>`;
+  cols.forEach((c,ci)=>{h+=`<div class="gs-ch" style="--oc:${ci*(R+2)}">${c}</div>`;});
+  rows.forEach((r,ri)=>{h+=`<div class="gs-rh" style="--or:${ri*(C+1)}">${r}</div>`;
+   cols.forEach((c,ci)=>{h+=`<label class="gs-cell${ci===C-1?' endr':''}" style="--or:${ri*(C+1)+ci+1};--oc:${ci*(R+2)+ri+1}"><span class="ml ml-c">${c}</span><span class="ml ml-r">${r}</span><span class="as-in"><input class="num" inputmode="numeric" maxlength="3" autocomplete="off" data-r="${ri+1}" data-c="${ci+1}" aria-label="${r}, ${c}"><span>%</span></span></label>`;});});
+  h+=`<div class="gs-rh gs-trh" style="--or:${R*(C+1)}">${txtTotal}</div>`;
+  cols.forEach((c,ci)=>{h+=`<div class="gs-cell gs-tot bad endc${ci===C-1?' endr':''}" data-c="${ci+1}" style="--or:${R*(C+1)+ci+1};--oc:${ci*(R+2)+R+1}"><span class="ml ml-c">${c}</span><span class="ml ml-r">${txtTotal}</span><span class="tv">0%</span></div>`;});
+  b.innerHTML=h+'</div>';
+  const gs=$('.gs',b),ins=$$('input.num',gs);
+  onCtl(b,'stack',v=>{gs.classList.toggle('by-row',v==='row');gs.classList.toggle('by-col',v==='col');});
+  const colSum=c=>ins.filter(i=>i.dataset.c==c).reduce((s,i)=>s+(+i.value||0),0);
+  gs.addEventListener('input',e=>{if(e.target.classList.contains('num'))e.target.value=e.target.value.replace(/\D/g,'').slice(0,3);
+   $$('.gs-tot',gs).forEach(t=>{const s=colSum(t.dataset.c);$('.tv',t).textContent=s+'%';t.classList.toggle('good',s===100);t.classList.toggle('bad',s!==100);});});
+  return()=>{const off=cols.map((c,ci)=>[c,colSum(ci+1)]).filter(x=>x[1]!==100);
+   if(off.length)return{error:`${txtMust} ${off.map(([c,s])=>`${c}: ${s}%`).join('; ')}`};
+   return{data:ins.map(i=>`Q6r${i.dataset.r}c${i.dataset.c}=${i.value===''?'blank':i.value}`).join('; ')};};
+ }},
+{id:'cardview',short:'Autosum card view',title:'Autosum with a previous column and mobile card view',
+ tags:['Read-only previous column','Live total meter','Rule per column','Card view with auto-advance'],
+ how:'The first column shows the respondent’s earlier answers as locked text, and every other column has its own target and rule (exactly, at least, at most). The total row is a live meter: total and target, a thin progress bar, and a short status only when something needs fixing. On phones it switches to card view: the previous column stays pinned, one scenario shows at a time with arrows and a counter, and completing a card slides to the next unfinished one. Leaving an “at most” column at 0 asks for confirmation instead of failing.',
+ q:'For each scenario, please split your prescriptions across the brands below.',inst:'Scenarios 1 and 2 must add up to exactly 100%. Scenario 3 can be at most 100%.',
+ build(b,api){
+  var lang=window.AutosumLang||{};
+  const txt=(k,d)=>lang[k]||d;
+  const fill=(t,n)=>t.indexOf('{n}')>-1?t.replace('{n}',n):n+' '+t;
+  const rows=['Brand A','Brand B','Brand C','Other brands'];
+  const cols=[{l:'Previous',k:'cprev',ro:true,prev:[40,30,20,10]},{l:'Scenario 1',k:'c1',sum:100,opt:'eq'},{l:'Scenario 2',k:'c2',sum:100,opt:'eq'},{l:'Scenario 3',k:'c3',sum:100,opt:'le'}];
+  const sym={eq:'',gt:'> ',ge:'≥ ',lt:'< ',le:'≤ '},words={eq:'must add up to exactly',gt:'must be more than',ge:'must be at least',lt:'must be less than',le:'must be at most'};
+  const sc=cols.map((c,i)=>i).filter(i=>!cols[i].ro);let cur=0;
+  let h=`<div class="asx-nav"><button type="button" class="asx-prev" aria-label="${txt('prev','Previous')}">‹</button><span class="asx-count" aria-live="polite"></span><button type="button" class="asx-next" aria-label="${txt('next','Next')}">›</button></div><div class="asx-wrap"><table class="asx"><thead><tr><th class="asx-lg">Brand</th>${cols.map((c,ci)=>`<th data-c="${ci}">${c.l}</th>`).join('')}</tr></thead><tbody>`;
+  rows.forEach((r,ri)=>{h+=`<tr><th scope="row">${r}</th>${cols.map((c,ci)=>c.ro?`<td data-c="${ci}" class="ro"><b>${c.prev[ri]}</b> %</td>`:`<td data-c="${ci}"><span class="as-in"><input class="num" inputmode="numeric" maxlength="3" autocomplete="off" data-r="${ri}" data-c="${ci}" aria-label="${r}, ${c.l}"><span>%</span></span></td>`).join('')}</tr>`;});
+  h+=`</tbody><tfoot><tr><th scope="row">${txt('total','Total')}</th>${cols.map((c,ci)=>`<td data-c="${ci}" class="mt"><div class="mt-line"><span class="mt-v">0</span><span class="mt-t"></span></div><div class="mt-bar"><span></span></div><div class="mt-st"></div></td>`).join('')}</tr></tfoot></table></div>`;
+  h+=`<div class="zs" hidden role="dialog" aria-modal="true"><div class="zs-box"><p class="zs-title"></p><p class="zs-msg"></p><div class="zs-btns"><button type="button" class="link zs-mod"></button><button type="button" class="next zs-go"></button></div></div></div>`;
+  b.innerHTML=h;
+  const tot=ci=>cols[ci].ro?cols[ci].prev.reduce((a,v)=>a+v,0):$$(`input[data-c="${ci}"]`,b).reduce((a,i)=>a+(+i.value||0),0);
+  const state=(ci,t)=>{const c=cols[ci];if(c.ro)return 'ref';if(t===0)return 'zero';const m=c.sum;
+   switch(c.opt){case 'eq':return t===m?'met':t>m?'broken':'filling';case 'gt':return t>m?'met':'filling';case 'ge':return t>=m?'met':'filling';case 'lt':return t<m?'met':'broken';default:return t<=m?'met':'broken';}};
+  const paint=()=>cols.forEach((c,ci)=>{const cell=$(`td.mt[data-c="${ci}"]`,b),t=tot(ci),st=state(ci,t);
+   cell.dataset.state=st;$('.mt-v',cell).textContent=t;$('.mt-t',cell).textContent=c.ro?' %':` / ${sym[c.opt]}${c.sum}%`;
+   const ratio=c.ro?1:Math.min(t/c.sum,1),bar=$('.mt-bar span',cell);bar.style.width=ratio*100+'%';
+   bar.style.background=st==='filling'?`hsl(${Math.round(ratio*110)},65%,45%)`:'';
+   let msg='';if(st==='filling'||st==='broken'){if(c.opt==='eq')msg=t<c.sum?fill(txt('remaining','{n} left'),c.sum-t):fill(txt('over','{n} over'),t-c.sum);
+    else if(c.opt==='gt'||c.opt==='ge')msg=txt('need','Need more');else msg=txt('must','Too high');}
+   $('.mt-st',cell).textContent=msg;});
+  const showCard=()=>{$$('th[data-c],td[data-c]',b).forEach(el=>{const ci=+el.dataset.c;if(!cols[ci].ro)el.classList.toggle('off',ci!==sc[cur]);});
+   $('.asx-count',b).textContent=`${cur+1} ${txt('of','of')} ${sc.length}`;$('.asx-prev',b).disabled=cur===0;$('.asx-next',b).disabled=cur===sc.length-1;};
+  const cardMode=()=>getComputedStyle($('.asx-nav',b)).display!=='none';
+  paint();showCard();
+  $('.asx-prev',b).addEventListener('click',()=>{if(cur>0){cur--;showCard();}});
+  $('.asx-next',b).addEventListener('click',()=>{if(cur<sc.length-1){cur++;showCard();}});
+  let adv=null;
+  b.addEventListener('input',e=>{const t=e.target;if(!t.classList.contains('num'))return;t.value=t.value.replace(/\D/g,'').slice(0,3);
+   const ci=+t.dataset.c;$(`td.mt[data-c="${ci}"]`,b).classList.remove('bad');paint();
+   clearTimeout(adv);
+   if(cardMode()&&ci===sc[cur]&&cols[ci].opt==='eq'&&state(ci,tot(ci))==='met'){
+    adv=setTimeout(()=>{const order=sc.slice(cur+1).concat(sc.slice(0,cur));const nx=order.find(x=>state(x,tot(x))!=='met');if(nx!==undefined){cur=sc.indexOf(nx);showCard();}},600);}});
+  const data=()=>rows.map((r,ri)=>cols.map(c=>`Q7r${ri+1}${c.k}=${c.ro?c.prev[ri]:($(`input[data-r="${ri}"][data-c="${cols.indexOf(c)}"]`,b).value||'blank')}`).join('; ')).join('; ');
+  const zs=$('.zs',b);
+  $('.zs-mod',b).textContent=txt('modify','Modify');$('.zs-go',b).textContent=txt('continue','Continue');
+  $('.zs-mod',b).addEventListener('click',()=>{zs.hidden=true;});
+  $('.zs-go',b).addEventListener('click',()=>{zs.hidden=true;api.accept(data());});
+  return()=>{const fails=sc.filter(ci=>{const st=state(ci,tot(ci)),o=cols[ci].opt;return (o==='lt'||o==='le')?st==='broken':st!=='met';});
+   $$('td.mt',b).forEach(x=>x.classList.toggle('bad',fails.includes(+x.dataset.c)));
+   if(fails.length){cur=sc.indexOf(fails[0]);showCard();
+    return{error:fails.map(ci=>`${cols[ci].l} ${words[cols[ci].opt]} ${cols[ci].sum}%. Current total: ${tot(ci)}%.`).join(' ')};}
+   const zeros=sc.filter(ci=>(cols[ci].opt==='lt'||cols[ci].opt==='le')&&tot(ci)===0);
+   if(zeros.length){$('.zs-title',b).textContent=txt('popupTitle','Nothing entered for some categories');
+    $('.zs-msg',b).innerHTML=txt('popupMsg1','It looks like you haven’t entered any values for: ')+zeros.map(ci=>cols[ci].l).join(', ')+txt('popupMsg2','.<br>Do you want to go back and fill them in, or continue as is?');
+    cur=sc.indexOf(zeros[0]);showCard();zs.hidden=false;$('.zs-go',b).focus();return{advance:true};}
+   return{data:data()};};
+ }},
+{id:'slider',short:'Slider',title:'0–10 slider that has to be moved',
+ tags:['Slider','Untouched check','Touch friendly'],
+ how:'A styled slider with a live value bubble. It starts “untouched”, so respondents can’t skip past by leaving the default value in place. End labels come from the question setup, not the code.',
+ q:'How likely are you to recommend this store to a friend or colleague?',inst:'Drag or tap the slider to answer.',
+ build(b){
+  b.innerHTML=sliderHTML('Likelihood to recommend, 0 to 10')+'<div class="sl-anchors"><span>Not at all likely</span><span>Extremely likely</span></div>';
+  const s=wireSlider($('.sl',b));
+  return()=>s.touched?{data:`Q7=${s.value}`}:{error:'Please move the slider to give your answer.'};
+ }},
+{id:'slidergrid',short:'Slider grid',title:'Slider grid',
+ tags:['Slider per row','Shared scale header','Row-level errors'],
+ how:'One slider per statement. On desktop the end labels sit once in a header above all sliders; on phones each row carries its own labels. Every slider must be moved.',
+ q:'How much do you agree with each statement?',inst:'Move each slider (0 = completely disagree, 10 = completely agree).',
+ build(b){
+  const rows=['The app is easy to use','Prices are fair','Delivery is reliable','I trust this brand'];
+  const anch='<span>Completely disagree</span><span>Completely agree</span>';
+  b.innerHTML=`<div class="sg"><div class="sg-head"><div></div><div class="sl-anchors">${anch}</div></div>${rows.map((r,i)=>`<div class="sg-row${i%2?' alt':''}" data-r="${i+1}"><div class="sg-label">${r}</div><div>${sliderHTML(r+', 0 to 10')}<div class="sl-anchors sg-mob">${anch}</div></div></div>`).join('')}</div>`;
+  const sl=$$('.sg-row',b).map(row=>wireSlider($('.sl',row),()=>row.classList.remove('miss')));
+  return()=>{let miss=0;$$('.sg-row',b).forEach((row,i)=>{const m=!sl[i].touched;row.classList.toggle('miss',m);if(m)miss++;});
+   return miss?{error:`Please move the slider on the highlighted ${miss>1?'rows':'row'}.`}:{data:sl.map((s,i)=>`Q8r${i+1}=${s.value}`).join('; ')};};
+ }},
+{id:'bipolar',short:'Bipolar slider',title:'Left–right (bipolar) slider grid',
+ tags:['Bipolar statements','Fills from the centre','Progress counter','Continue appears when done'],
+ how:'Each row sits between two opposite statements, and the colour grows out from the centre toward the chosen side. A progress bar counts answered rows, and Continue stays hidden until every slider has been moved. On phones the two statements sit above the slider.',
+ q:'Where would you place Brand A between each pair of words?',inst:'Move each slider toward the word that fits better.',
+ build(b,api){
+  const pairs=[['Traditional','Modern'],['Expensive','Affordable'],['Complicated','Simple'],['Serious','Fun']];
+  b.innerHTML=`<div class="bp-prog"><div class="bp-pbar"><span></span></div><span class="bp-ptxt" aria-live="polite"></span></div>`+pairs.map(([l,r],i)=>`<div class="bp-row" data-r="${i+1}"><span class="bp-l">${l}</span><div class="sl untouched" data-fill="center"><div class="sl-track"><output class="sl-val">Move</output><input type="range" min="-3" max="3" step="1" value="0" aria-label="${l} to ${r}, -3 to 3"></div><div class="sl-ticks">${[-3,-2,-1,0,1,2,3].map(n=>`<span>${n>0?'+'+n:n}</span>`).join('')}</div></div><span class="bp-r">${r}</span></div>`).join('');
+  const prog=()=>{const n=sl.filter(x=>x.touched).length;$('.bp-pbar span',b).style.width=n/pairs.length*100+'%';$('.bp-ptxt',b).textContent=`${n} / ${pairs.length}`;api.gate(n===pairs.length);};
+  const sl=$$('.bp-row',b).map(row=>wireSlider($('.sl',row),()=>{row.classList.remove('miss');prog();}));
+  prog();
+  return()=>sl.every(x=>x.touched)?{data:sl.map((x,i)=>`Q14r${i+1}=${x.value}`).join('; ')}:{error:'Please move every slider.'};
+ }},
+{id:'rank',short:'Click rank',title:'Click rank with a min–max range',
+ tags:['Ranking','Min and max ranks','Continue appears when ready','Exclusive “None”'],
+ how:'Respondents tap items in order; tapping a ranked item removes it and the others renumber. A min–max range sets how many must be ranked: Continue stays hidden until the minimum is met, and taps past the maximum are blocked. “None” clears every rank and also lets the respondent continue.',
+ q:'When choosing a smartphone, which features matter most to you?',inst:'Tap 2 or 3 features in order, most important first. Continue appears once at least 2 are ranked.',
+ build(b,api){
+  const MIN=2,MAX=3,items=['Price','Battery life','Camera','Screen size','Durability','Storage'];
+  b.innerHTML=items.map((t,i)=>`<button type="button" class="rk ri" data-r="r${i+1}" aria-pressed="false"><span class="badge"></span><span>${t}</span></button>`).join('')+'<button type="button" class="rk rk-none" aria-pressed="false"><span class="badge sq"></span><span>None of these matter to me</span></button><p class="hint" aria-live="polite"></p>';
+  let order=[],none=false;const hint=$('.hint',b),nb=$('.rk-none',b);
+  const paint=()=>{$$('.ri',b).forEach(x=>{const k=order.indexOf(x.dataset.r);x.classList.toggle('on',k>-1);$('.badge',x).textContent=k>-1?k+1:'';x.setAttribute('aria-pressed',k>-1);});
+   nb.classList.toggle('on',none);$('.badge',nb).textContent=none?'✓':'';nb.setAttribute('aria-pressed',none);api.gate(none||order.length>=MIN);};
+  b.addEventListener('click',e=>{const x=e.target.closest('.rk');if(!x)return;hint.textContent='';
+   if(x===nb){none=!none;if(none)order=[];paint();return;}
+   none=false;const r=x.dataset.r,k=order.indexOf(r);
+   if(k>-1)order.splice(k,1);else if(order.length<MAX)order.push(r);else hint.textContent=`You can rank up to ${MAX}. Tap a ranked item to remove it first.`;paint();});
+  paint();
+  return()=>none?{data:'Q15r99=1'}:order.length<MIN?{error:`Please rank at least ${MIN} items.`}:{data:order.map((r,i)=>`Q15${r}=${i+1}`).join('; ')};
+ }},
+{id:'selrank',short:'Select then rank',title:'Hybrid: tick what applies, then rank it',
+ tags:['Checkbox + click rank','Only ticked rows rank','Ranks close gaps'],
+ how:'A checkbox column sits next to a click-rank column. Only rows ticked on the left can be ranked; unticking a row clears its rank and the other ranks close the gap. The number of ranks needed adapts: up to 3, or fewer if fewer rows are ticked.',
+ q:'Which of these brands have you used in the past year? Then rank the ones you used.',inst:'Tick every brand you’ve used, then tap your top 3 of those in order.',
+ build(b){
+  const rows=['Brand A','Brand B','Brand C','Brand D','Brand E'],MAX=3;
+  b.innerHTML=`<div class="hy sr"><div class="hy-h"></div><div class="hy-h">Used in past year</div><div class="hy-h">Rank (top ${MAX})</div>${rows.map((r,i)=>`<div class="hy-row${i%2?' alt':''}" data-r="${i+1}"><div class="hy-l">${r}</div><div class="hy-dk">${optRow('checkbox','sr'+(i+1),'1','Used in past year','','inline')}</div><div class="hy-a"><button type="button" class="rk sr-rk" aria-label="${r}: rank"><span class="badge"></span><span class="rk-t"></span></button></div></div>`).join('')}</div><p class="hint" aria-live="polite"></p>`;
+  let order=[];const hint=$('.hint',b);
+  const on=n=>$(`input[name=sr${n}]`,b).checked;
+  const paint=()=>$$('.sr-rk',b).forEach(x=>{const n=x.closest('.hy-row').dataset.r,k=order.indexOf(n),ok=on(n);
+   x.classList.toggle('on',k>-1);x.classList.toggle('idle',!ok);$('.badge',x).textContent=k>-1?k+1:'';
+   $('.rk-t',x).textContent=k>-1?`Rank ${k+1}`:ok?'Tap to rank':'Tick “Used” first';});
+  b.addEventListener('change',e=>{const nm=e.target.name||'';if(!nm.startsWith('sr'))return;const n=nm.slice(2);
+   if(!e.target.checked){const k=order.indexOf(n);if(k>-1)order.splice(k,1);}paint();});
+  b.addEventListener('click',e=>{const x=e.target.closest('.sr-rk');if(!x)return;hint.textContent='';const n=x.closest('.hy-row').dataset.r,k=order.indexOf(n);
+   if(!on(n)){hint.textContent='Tick “Used in past year” for this brand before ranking it.';return;}
+   if(k>-1)order.splice(k,1);else if(order.length<MAX)order.push(n);else hint.textContent=`You’ve already ranked ${MAX}. Tap a ranked brand to remove it first.`;paint();});
+  paint();
+  return()=>{const ticked=rows.map((r,i)=>String(i+1)).filter(on);
+   if(!ticked.length)return{error:'Please tick at least one brand you’ve used.'};
+   const need=Math.min(MAX,ticked.length);
+   if(order.length<need)return{error:`Please rank ${need} of the brands you’ve used (${order.length} of ${need} done).`};
+   return{data:ticked.map(n=>`Q16r${n}c1=1`+(order.includes(n)?`; Q16r${n}c2=${order.indexOf(n)+1}`:'')).join('; ')};};
+ }},
+{id:'dragrank',short:'Drag rank',title:'Drag-and-drop rank sort with a locked row',
+ tags:['Story order','Locked rows','Drag or arrow buttons','Touch and mouse'],
+ how:'Respondents drag items by the handle to put them in order, and the rank numbers update as they move. Arrow buttons do the same without dragging. A row can be locked from an earlier answer: it can’t be dragged, but its number still updates as other rows move around it.',
+ q:'Please put these in order of importance when choosing an online store.',inst:'Drag by the ⠿ handle or use the arrows. Most important at the top.',
+ build(b){
+  const items=['Price','Product quality','Brand reputation','Customer service','Delivery time'];
+  const list0=[[1,items[0],true]].concat(shuffle(items.slice(1).map((t,i)=>[i+2,t,false])));
+  b.innerHTML=`<ol class="so-list">${list0.map(([v,t,lk])=>lk
+   ?`<li class="so locked" data-r="r${v}"><span class="so-n"></span><span class="so-t">${t}<span class="so-lk">Locked from an earlier answer</span></span><span class="handle" aria-label="Locked">🔒</span></li>`
+   :`<li class="so" data-r="r${v}"><span class="so-n"></span><span class="so-t">${t}</span><span class="so-btns"><button type="button" class="so-up" aria-label="Move ${t} up">▲</button><button type="button" class="so-dn" aria-label="Move ${t} down">▼</button></span><span class="handle" aria-hidden="true">⠿</span></li>`).join('')}</ol>`;
+  const list=$('.so-list',b);let moved=false,drag=null;
+  const renum=()=>$$('.so',list).forEach((li,i)=>{$('.so-n',li).textContent=i+1;});
+  renum();
+  list.addEventListener('click',e=>{const li=e.target.closest('.so');if(!li)return;
+   if(e.target.closest('.so-up')&&li.previousElementSibling){list.insertBefore(li,li.previousElementSibling);moved=true;}
+   if(e.target.closest('.so-dn')&&li.nextElementSibling){list.insertBefore(li.nextElementSibling,li);moved=true;}
+   renum();});
+  list.addEventListener('pointerdown',e=>{const h=e.target.closest('.handle');if(!h||h.closest('.locked'))return;e.preventDefault();
+   drag=h.closest('.so');drag.classList.add('dragging');h.setPointerCapture(e.pointerId);});
+  list.addEventListener('pointermove',e=>{if(!drag)return;const y=e.clientY;
+   const before=$$('.so',list).filter(x=>x!==drag).find(x=>{const r=x.getBoundingClientRect();return y<r.top+r.height/2;});
+   if(before){if(drag.nextElementSibling!==before){list.insertBefore(drag,before);moved=true;}}
+   else if(list.lastElementChild!==drag){list.appendChild(drag);moved=true;}
+   renum();});
+  const end=()=>{if(drag){drag.classList.remove('dragging');drag=null;}};
+  list.addEventListener('pointerup',end);list.addEventListener('pointercancel',end);
+  return()=>moved?{data:$$('.so',list).map((li,i)=>`Q17${li.dataset.r}=${i+1}`).join('; ')}:{error:'Please arrange the items in your order before continuing.'};
+ }},
+{id:'hybrid',short:'Hybrid grid',title:'Hybrid grid with an exclusive “Don’t know” column',
+ tags:['Mixed input types','Exclusive checkbox','Clears, never disables'],
+ how:'The first column can be a number, text, dropdown, click rank or slider; the second column is an exclusive “Don’t know” checkbox. Answering one side clears the other for that row. Nothing is ever greyed out or locked. Switch the first-column type in the setting strip.',
+ q:'',inst:'',
+ build(b){
+  const rows=['Product A','Product B','Product C','Product D'];
+  const T={num:{l:'Numeric',q:'How many patients did you treat with each product in the past month?',h:'Number of patients'},
+   text:{l:'Text',q:'What is the main reason you use each product?',h:'Main reason'},
+   drop:{l:'Dropdown',q:'How often do you prescribe each product?',h:'How often'},
+   rank:{l:'Click rank',q:'Rank these products from most to least preferred.',h:'Rank (tap in order)'},
+   slider:{l:'Slider',q:'How satisfied are you with each product? (0–10)',h:'Satisfaction'}};
+  const sv=b.closest('.survey'),qt=$('.qtext',sv),qi=$('.qinst',sv);
+  b.innerHTML=ctl('First column',Object.entries(T).map(([k,v])=>[k,v.l]),'num','htype')+'<div class="hy"></div>';
+  const hy=$('.hy',b);let type='num',order=[],sl={};
+  const field=(n,r)=>{switch(type){
+   case 'num':return `<input class="num hy-in" inputmode="numeric" maxlength="3" autocomplete="off" aria-label="${r}: number of patients">`;
+   case 'text':return `<input class="txt hy-in" type="text" aria-label="${r}: main reason">`;
+   case 'drop':return `<select class="hy-in" aria-label="${r}: how often"><option value="">Select…</option><option value="1">Every day</option><option value="2">Weekly</option><option value="3">Monthly</option><option value="4">Rarely</option></select>`;
+   case 'rank':return `<button type="button" class="rk hy-rk" aria-label="${r}: rank"><span class="badge"></span><span class="rk-t">Tap to rank</span></button>`;
+   case 'slider':return sliderHTML(`${r}: satisfaction, 0 to 10`);}};
+  const row=n=>$(`.hy-row[data-r="${n}"]`,hy);
+  const clearDK=n=>{$(`input[name=hydk${n}]`,hy).checked=false;row(n).classList.remove('miss');};
+  const paintRank=()=>$$('.hy-rk',hy).forEach(x=>{const n=x.closest('.hy-row').dataset.r,k=order.indexOf(n);
+   x.classList.toggle('on',k>-1);$('.badge',x).textContent=k>-1?k+1:'';$('.rk-t',x).textContent=k>-1?`Rank ${k+1}`:'Tap to rank';});
+  const draw=()=>{qt.textContent=T[type].q;qi.textContent=type==='rank'?'Tap the products in order, or tick “Don’t know” for any you can’t rank.':'Answer each row, or tick “Don’t know”.';
+   order=[];sl={};
+   hy.innerHTML=`<div class="hy-h"></div><div class="hy-h">${T[type].h}</div><div class="hy-h">Don’t know</div>`+rows.map((r,i)=>`<div class="hy-row${i%2?' alt':''}" data-r="${i+1}"><div class="hy-l">${r}</div><div class="hy-a">${field(i+1,r)}</div><div class="hy-dk">${optRow('checkbox','hydk'+(i+1),'1','Don’t know','','inline')}</div></div>`).join('');
+   if(type==='slider')$$('.sl',hy).forEach(w=>{const n=w.closest('.hy-row').dataset.r;sl[n]=wireSlider(w,()=>clearDK(n));});};
+  draw();
+  onCtl(b,'htype',v=>{type=v;draw();});
+  hy.addEventListener('input',e=>{const t=e.target;if(!t.classList.contains('hy-in'))return;
+   if(t.classList.contains('num'))t.value=t.value.replace(/\D/g,'').slice(0,3);
+   if(t.value.trim())clearDK(t.closest('.hy-row').dataset.r);});
+  hy.addEventListener('change',e=>{const t=e.target,n=t.closest('.hy-row').dataset.r;
+   if(t.tagName==='SELECT'&&t.value)clearDK(n);
+   if(t.name==='hydk'+n&&t.checked){row(n).classList.remove('miss');
+    const f=$('.hy-in',row(n));if(f)f.value='';
+    const k=order.indexOf(n);if(k>-1){order.splice(k,1);paintRank();}
+    if(sl[n])sl[n].reset();}});
+  hy.addEventListener('click',e=>{const x=e.target.closest('.hy-rk');if(!x)return;const n=x.closest('.hy-row').dataset.r,k=order.indexOf(n);
+   if(k>-1)order.splice(k,1);else{order.push(n);clearDK(n);}paintRank();});
+  return()=>{let miss=0;const d=[];
+   rows.forEach((r,i)=>{const n=String(i+1),rw=row(n),dk=$(`input[name=hydk${n}]`,rw).checked;let v='';
+    if(type==='rank'){const k=order.indexOf(n);v=k>-1?String(k+1):'';}
+    else if(type==='slider')v=sl[n].touched?sl[n].value:'';
+    else v=$('.hy-in',rw).value.trim();
+    const ok=dk||v!=='';rw.classList.toggle('miss',!ok);if(!ok)miss++;
+    d.push(dk?`Q11r${n}dk=1`:`Q11r${n}=${type==='text'?'"'+v+'"':v}`);});
+   return miss?{error:`Please answer or tick “Don’t know” on the highlighted ${miss>1?'rows':'row'}.`}:{data:d.join('; ')};};
+ }},
+{id:'patient',short:'Patient chart',title:'Patient chart: several questions in one table',
+ tags:['Chart audit','Mixed input types','Card per patient on phones'],
+ how:'Doctors fill in details for several patients on one screen. Each column is a patient and each row is a question, mixing numbers, dropdowns, month–year dates and option chips. On phones the table turns into one card per patient. Every field is checked, including the age range and dates that can’t be in the future.',
+ q:'Please fill in the details below for the last 3 patients you saw with this condition.',inst:'Complete every field for each patient. Notes are optional.',
+ build(b){
+  const P=3,now=new Date(),cy=now.getFullYear();
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const years=[];for(let y=cy;y>=cy-15;y--)years.push(y);
+  const Q=[{k:'age',l:'Age (years)',t:'num'},
+   {k:'sex',l:'Sex',t:'sel',o:['Male','Female']},
+   {k:'stage',l:'Stage at diagnosis',t:'sel',o:['Stage I','Stage II','Stage III','Stage IV','Not documented']},
+   {k:'dx',l:'Month and year of diagnosis',t:'my'},
+   {k:'line',l:'Current line of therapy',t:'radio',o:['1L','2L','3L+']},
+   {k:'com',l:'Comorbidities',t:'chk',o:['Diabetes','Hypertension','Kidney disease','None'],ex:'None'},
+   {k:'note',l:'Notes (optional)',t:'text'}];
+  const R=Q.length;
+  const sel=(aria,k,opts,ph)=>`<select data-k="${k}" aria-label="${aria}"><option value="">${ph||'Select…'}</option>${opts.map((o,i)=>`<option value="${i+1}">${o}</option>`).join('')}</select>`;
+  const cell=(q,c)=>{const a=`Patient ${c+1}: ${q.l}`;switch(q.t){
+   case 'num':return `<input class="num" inputmode="numeric" maxlength="3" autocomplete="off" aria-label="${a}">`;
+   case 'sel':return sel(a,q.k,q.o);
+   case 'my':return `<div class="my">${sel(`Patient ${c+1}: diagnosis month`,'m',months,'Month')}<select data-k="y" aria-label="Patient ${c+1}: diagnosis year"><option value="">Year</option>${years.map(y=>`<option>${y}</option>`).join('')}</select></div>`;
+   case 'radio':case 'chk':return `<div class="chips-in" role="group" aria-label="${a}">${q.o.map((o,i)=>`<label class="chip-opt"><input type="${q.t==='radio'?'radio':'checkbox'}" name="pc${c}_${q.k}" value="${i+1}"${q.ex===o?' data-ex="1"':''}>${o}</label>`).join('')}</div>`;
+   default:return `<input class="txt" type="text" aria-label="${a}">`;}};
+  let h=`<div class="pc-wrap"><div class="pc" style="--pc-n:${P}"><div class="pc-corner">Question</div>`;
+  for(let c=0;c<P;c++)h+=`<div class="pc-ph" style="--om:${c*(R+1)}">Patient ${c+1}</div>`;
+  Q.forEach((q,r)=>{h+=`<div class="pc-ql">${q.l}</div>`;
+   for(let c=0;c<P;c++)h+=`<div class="pc-c${r===R-1?' endc':''}" data-p="${c}" data-q="${q.k}" style="--om:${c*(R+1)+r+1}"><span class="ml">${q.l}</span>${cell(q,c)}</div>`;});
+  b.innerHTML=h+'</div></div>';
+  b.addEventListener('input',e=>{const t=e.target;if(t.classList.contains('num'))t.value=t.value.replace(/\D/g,'');const c=t.closest('.pc-c');if(c)c.classList.remove('miss');});
+  b.addEventListener('change',e=>{const t=e.target,c=t.closest('.pc-c');if(!c)return;c.classList.remove('miss');
+   if(t.type==='checkbox'&&t.checked)$$('input[type=checkbox]',c).forEach(i=>{if(i!==t&&(t.dataset.ex||i.dataset.ex))i.checked=false;});});
+  return()=>{const bad=new Set();let ageErr=false,dateErr=false;const out=[];
+   for(let c=0;c<P;c++){const parts=[];
+    Q.forEach(q=>{const el=$(`.pc-c[data-p="${c}"][data-q="${q.k}"]`,b);let v='',ok=true;
+     if(q.t==='num'){v=$('input',el).value;if(v==='')ok=false;else if(+v<18||+v>99){ok=false;ageErr=true;}}
+     else if(q.t==='sel'){v=$('select',el).value;ok=!!v;}
+     else if(q.t==='my'){const m=$('select[data-k=m]',el).value,y=$('select[data-k=y]',el).value;ok=!!(m&&y);
+      if(ok&&+y===cy&&+m>now.getMonth()+1){ok=false;dateErr=true;}v=ok?`${m.padStart(2,'0')}/${y}`:'';}
+     else if(q.t==='radio'||q.t==='chk'){v=$$('input:checked',el).map(i=>i.value).join(',');ok=!!v;}
+     else v=$('input',el).value.trim();
+     el.classList.toggle('miss',!ok);if(!ok)bad.add(c+1);if(v)parts.push(`${q.k}=${v}`);});
+    out.push(`P${c+1}: ${parts.join(', ')}`);}
+   if(bad.size){let m=`Please complete the highlighted fields for ${[...bad].map(n=>'Patient '+n).join(', ')}.`;
+    if(ageErr)m+=' Age must be between 18 and 99.';if(dateErr)m+=' The diagnosis date can’t be in the future.';return{error:m};}
+   return{data:out.join(' | ')};};
+ }},
+{id:'cardsort',short:'Card sort',title:'Card sort, one card at a time',
+ tags:['Card sort','Undo','Progress counter'],
+ how:'Each statement appears as a card. One tap files it into a box and brings up the next card. Respondents can undo, and the counter shows how many are left.',
+ q:'How appealing is each of these store features?',inst:'Tap a box to sort each card.',
+ build(b){
+  const cards=['Plastic-free packaging','Monthly subscription','Loyalty points','Same-day delivery','Free gift wrapping'];
+  const bk=['Very appealing','Somewhat appealing','Not appealing'];
+  const ans=[];
+  b.innerHTML=`<div class="cs-count" aria-live="polite"></div><div class="cs-stage"><div class="cs-card"></div></div><div class="cs-buckets">${bk.map((t,i)=>`<button type="button" class="bucket" data-c="${i+1}">${t}<small>0 cards</small></button>`).join('')}</div><button type="button" class="link cs-undo" hidden>Undo last card</button>`;
+  const cnt=$('.cs-count',b),card=$('.cs-card',b),undo=$('.cs-undo',b);
+  const paint=()=>{const i=ans.length,done=i>=cards.length;
+   cnt.textContent=done?'All cards sorted':`Card ${i+1} of ${cards.length}`;
+   card.textContent=done?'✓ All sorted':cards[i];card.classList.toggle('done',done);
+   card.style.animation='none';void card.offsetHeight;card.style.animation='';
+   $$('.bucket',b).forEach(x=>{const n=ans.filter(a=>a===x.dataset.c).length;$('small',x).textContent=`${n} ${n===1?'card':'cards'}`;x.disabled=done;});
+   undo.hidden=!i;};
+  b.addEventListener('click',e=>{const x=e.target.closest('.bucket');if(x&&ans.length<cards.length){ans.push(x.dataset.c);paint();}
+   if(e.target.closest('.cs-undo')){ans.pop();paint();}});
+  paint();
+  return()=>ans.length<cards.length?{error:`Please sort all the cards (${cards.length-ans.length} left).`}:{data:ans.map((c,i)=>`Q13r${i+1}=${c}`).join('; ')};
+ }},
+{id:'maxdiff',short:'MaxDiff',title:'MaxDiff across several sets',
+ tags:['Best–worst scaling','Design-driven sets','Same-item block'],
+ how:'Items come from a design file, four per screen. The same item can’t be picked as both Most and Least, and answers are stored per set for the analysis team.',
+ q:'Which of these is MOST and which is LEAST important when booking a hotel?',inst:'Pick one in each column.',
+ build(b){
+  const items=['Price','Location','Free breakfast','Guest reviews','Free cancellation','Room size'];
+  const design=[[1,2,3,4],[5,6,1,3],[2,4,6,5]];
+  let set=0;const res=[];
+  const draw=()=>{b.innerHTML=`<div class="md-set" aria-live="polite">Set ${set+1} of ${design.length}</div><div class="md-wrap"><table class="md"><thead><tr><th>Most</th><th>Feature</th><th>Least</th></tr></thead><tbody>${design[set].map(n=>`<tr><td class="c"><label class="cell"><input type="radio" name="best" value="${n}" aria-label="Most important: ${items[n-1]}"><span class="fir" aria-hidden="true"></span></label></td><td class="it">${items[n-1]}</td><td class="c"><label class="cell"><input type="radio" name="worst" value="${n}" aria-label="Least important: ${items[n-1]}"><span class="fir" aria-hidden="true"></span></label></td></tr>`).join('')}</tbody></table></div>`;};
+  draw();
+  b.addEventListener('change',e=>{const t=e.target;const other=t.name==='best'?'worst':'best';const o=$(`input[name=${other}][value="${t.value}"]`,b);if(o&&o.checked)o.checked=false;});
+  return()=>{const be=$('input[name=best]:checked',b),wo=$('input[name=worst]:checked',b);
+   if(!be||!wo)return{error:'Please pick one feature as Most and one as Least.'};
+   res.push(`Q14_${set+1}best=${be.value}; Q14_${set+1}worst=${wo.value}`);
+   if(set<design.length-1){set++;draw();return{advance:true};}
+   return{data:res.join('; ')};};
+ }},
+{id:'choice',short:'Choice cards',title:'Conjoint-style choice cards',
+ tags:['Choice task','Swipe on phones','“None” option'],
+ how:'Product options are built from an attribute design and shown side by side; on a phone they swipe. Picking “None” clears the chosen card, and choosing a card clears “None”.',
+ q:'If these were the only wireless earbuds available, which would you buy?',inst:'Tap a card to choose it, or select “None”.',
+ build(b){
+  const c=[{n:'Option 1',a:{Brand:'Brand A',Price:'$49',Battery:'6 hours',Warranty:'1 year'}},
+           {n:'Option 2',a:{Brand:'Brand B',Price:'$79',Battery:'10 hours',Warranty:'2 years'}},
+           {n:'Option 3',a:{Brand:'Brand C',Price:'$119',Battery:'8 hours',Warranty:'3 years'}}];
+  b.innerHTML=`<div class="cc-row">${c.map((x,i)=>`<button type="button" class="ccard" data-v="${i+1}" aria-pressed="false"><h3>${x.n}</h3><dl>${Object.entries(x.a).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl><span class="pick">Choose</span></button>`).join('')}</div>`+optRow('radio','q15none','99','I wouldn’t buy any of these');
+  let v=null;const none=$('input[name=q15none]',b);
+  const paint=()=>$$('.ccard',b).forEach(x=>{const on=x.dataset.v===v;x.classList.toggle('sel',on);x.setAttribute('aria-pressed',on);$('.pick',x).textContent=on?'✓ Chosen':'Choose';});
+  b.addEventListener('click',e=>{const x=e.target.closest('.ccard');if(!x)return;v=x.dataset.v;none.checked=false;paint();});
+  none.addEventListener('change',()=>{if(none.checked){v=null;paint();}});
+  return()=>{if(none.checked)return{data:'Q15=99'};if(!v)return{error:'Please choose one option, or select “None”.'};return{data:`Q15=${v}`};};
+ }},
+{id:'popup',short:'Image popup',title:'Image gallery popup with view tracking',
+ tags:['Zoomable images','Gallery navigation','Must view all'],
+ how:'Thumbnails open a full-screen gallery that respondents can swipe or step through. The page records which images were opened, and the question only accepts an answer once every image has been viewed.',
+ q:'Please look at both pack designs. Overall, how appealing are they?',inst:'Tap an image to enlarge it.',
+ build(b){
+  const imgs=[['Design A','#2f6f9f','#f2b134'],['Design B','#6d3c8f','#3ec1a6']];
+  b.innerHTML=`<div class="thumbs">${imgs.map(([n,c1,c2])=>{const u=conceptSVG(n,c1,c2);return `<a class="zoomable" href="${u}" data-gallery="q16" data-caption="${n}"><img src="${u}" alt="${n} pack concept"><span class="zm">Tap to view</span></a>`;}).join('')}</div><div class="scale">${['Not at all','Slightly','Moderately','Very','Extremely'].map((t,k)=>optRow('radio','q16',k+1,t,'','col')).join('')}</div>`;
+  return()=>{const unseen=$$('.zoomable:not(.seen)',b).length;
+   if(unseen)return{error:`Please view ${unseen>1?'both designs':'the remaining design'} before answering.`};
+   const v=$('input[name=q16]:checked',b);if(!v)return{error:'Please select how appealing the designs are.'};
+   return{data:`Q16=${v.value}; Q16_viewedA=1; Q16_viewedB=1`};};
+ }},
+{id:'openend',short:'Open-end',title:'Open-end with word count and quality checks',
+ tags:['Minimum words','Character limit bar','Auto-tidy spacing','Gibberish check'],
+ how:'A live counter shows how many more words are needed, and a bar fills toward the character limit, turning amber near it and red past it. Leading spaces and double spaces are tidied as the respondent types, and keyboard mashing or repeated letters are caught. Ticking “Don’t know” clears the text, and typing again clears “Don’t know”.',
+ q:'What, if anything, would make you shop with us more often?',inst:'Please write at least 10 words (up to 300 characters).',
+ build(b){
+  const MINW=10,MAXC=300;
+  b.innerHTML=`<textarea aria-label="Your answer" placeholder="Type your answer here"></textarea><div class="ta-bar"><span></span></div><div class="oe-meta"><span class="cc" aria-live="polite"></span><span class="chars"></span>${optRow('checkbox','q23dk','1','Don’t know','','inline')}</div>`;
+  const ta=$('textarea',b),cc=$('.cc',b),ch=$('.chars',b),bar=$('.ta-bar',b),dk=$('input[name=q23dk]',b);
+  const words=()=>{const t=ta.value.trim();return t?t.split(/\s+/).length:0;};
+  const count=()=>{const w=words(),n=ta.value.length;
+   cc.textContent=w>=MINW?`✓ ${w} words`:`${MINW-w} more ${MINW-w===1?'word':'words'} needed`;cc.classList.toggle('met',w>=MINW);
+   ch.textContent=`${n} / ${MAXC}`;$('span',bar).style.width=Math.min(n/MAXC,1)*100+'%';bar.dataset.state=n>MAXC?'over':n>=MAXC*.85?'warn':'';};
+  ta.addEventListener('input',()=>{const v=ta.value,c=v.replace(/^\s+/,'').replace(/ {2,}/g,' ');
+   if(c!==v){const pos=Math.max(ta.selectionStart-(v.length-c.length),0);ta.value=c;ta.setSelectionRange(pos,pos);}
+   if(ta.value.trim())dk.checked=false;count();});
+  dk.addEventListener('change',()=>{if(dk.checked){ta.value='';count();}});
+  count();
+  return()=>{if(dk.checked)return{data:'Q23dk=1'};
+   const t=ta.value.trim(),w=words();
+   if(w<MINW)return{error:`Please write at least ${MINW} words (${w} so far).`};
+   if(t.length>MAXC)return{error:`Please shorten your answer to ${MAXC} characters (currently ${t.length}).`};
+   const letters=(t.match(/[a-z]/gi)||[]).length||1;
+   const vowelShare=(t.match(/[aeiou]/gi)||[]).length/letters;
+   if(/(.)\1{3,}/.test(t)||vowelShare<.2||/(asdf|qwer|zxcv|hjkl)/i.test(t))return{error:'This answer looks incomplete. Please describe it in your own words.'};
+   return{data:`Q23="${t.length>60?t.slice(0,60)+'…':t}"`};};
+ }}
+];
+
+/* Build every demo */
+const main=$('#demos'),nav=$('#nav');
+const startMode=window.innerWidth<700?'mobile':'desktop';
+function setStage(sec,mode){$('.stage',sec).dataset.mode=mode;$$('.viewbar button',sec).forEach(x=>x.setAttribute('aria-pressed',x.dataset.mode===mode));}
+DEMOS.forEach((d,i)=>{
+  const s=document.createElement('section');
+  s.className='demo';s.id=d.id;
+  const pct=Math.round((i+1)/DEMOS.length*100);
+  s.innerHTML=`<h2>${d.title}</h2><ul class="tags">${d.tags.map(t=>`<li>${t}</li>`).join('')}</ul><p class="how">${d.how}</p>
+  <div class="viewbar"><div class="seg" role="group" aria-label="Preview mode"><button type="button" data-mode="desktop">Desktop</button><button type="button" data-mode="mobile">Mobile</button></div><span class="scrollhint">Scroll sideways to see the full desktop screen</span></div>
+  <div class="stage"><div class="frame"><div class="survey"><div class="sv-bar"><span style="width:${pct}%"></span></div><div class="sv-inner">
+  <div class="err" role="alert" hidden></div>
+  <div class="q"><p class="qtext">${d.q}</p><p class="qinst">${d.inst}</p></div>
+  <div class="sv-foot"><button class="link reset" type="button">Reset</button><button class="next" type="button">Continue »</button></div>
+  <div class="ok" hidden><b>✓ Answer accepted.</b> Data recorded: <code></code></div></div></div></div></div>`;
+  main.appendChild(s);
+  nav.insertAdjacentHTML('beforeend',`<a class="chip" href="#${d.id}">${d.short}</a>`);
+  setStage(s,startMode);
+  $('.viewbar .seg',s).addEventListener('click',e=>{const x=e.target.closest('button');if(x)setStage(s,x.dataset.mode);});
+  const err=$('.err',s),ok=$('.ok',s);let body,validate;
+  const nextBtn=$('.sv-foot .next',s);
+  const api={accept(data){err.hidden=true;$('code',ok).textContent=data;ok.hidden=false;},gate(on){nextBtn.style.display=on?'':'none';}};
+  const init=()=>{const nb=document.createElement('div');nb.className='qbody';
+    if(body)body.replaceWith(nb);else $('.q',s).appendChild(nb);
+    body=nb;nextBtn.style.display='';validate=d.build(body,api);err.hidden=true;ok.hidden=true;};
+  nextBtn.addEventListener('click',()=>{const r=validate();
+    if(r.error){err.textContent=r.error;err.hidden=false;ok.hidden=true;err.scrollIntoView({block:'nearest',behavior:'smooth'});return;}
+    err.hidden=true;
+    if(r.data){$('code',ok).textContent=r.data;ok.hidden=false;}});
+  $('.reset',s).addEventListener('click',init);
+  init();
+});
+
+/* Global desktop / mobile switch */
+const gmode=$('#gmode');
+const paintG=m=>$$('button',gmode).forEach(x=>x.setAttribute('aria-pressed',x.dataset.mode===m));
+paintG(startMode);
+gmode.addEventListener('click',e=>{const x=e.target.closest('button');if(!x)return;paintG(x.dataset.mode);$$('.demo').forEach(s=>setStage(s,x.dataset.mode));});
+
+/* Highlight the chip for the section in view */
+nav.insertAdjacentHTML('beforeend','<a class="chip" href="#contact">Contact</a>');
+const chips=$$('.chip',nav);
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;
+  chips.forEach(c=>{const on=c.getAttribute('href')==='#'+e.target.id;c.classList.toggle('active',on);
+    if(on)nav.scrollTo({left:c.offsetLeft-nav.offsetLeft-nav.clientWidth/2+c.clientWidth/2,behavior:'smooth'});});
+}),{rootMargin:'-35% 0px -60% 0px'});
+$$('.demo').forEach(s=>io.observe(s));io.observe($('#contact'));
+if(location.hash){const t=document.getElementById(location.hash.slice(1));if(t)setTimeout(()=>t.scrollIntoView(),50);}
+
+/* Image gallery popup for a.zoomable links */
+const lb=$('#lb'),lbImg=$('img',lb),lbCap=$('.lb-cap',lb);let gal=[],gi=0,lastFocus=null;
+function show(i){gi=(i+gal.length)%gal.length;const a=gal[gi];
+  lbImg.src=a.getAttribute('href');lbImg.alt=a.dataset.caption||'';
+  lbCap.textContent=`${a.dataset.caption||''} (${gi+1} of ${gal.length})`;
+  a.classList.add('seen');const z=$('.zm',a);if(z)z.textContent='✓ Viewed';
+  $('.lb-prev',lb).hidden=$('.lb-next',lb).hidden=gal.length<2;}
+function closeLb(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true');if(lastFocus)lastFocus.focus();}
+document.addEventListener('click',e=>{const a=e.target.closest('a.zoomable');if(!a)return;e.preventDefault();
+  lastFocus=a;const g=a.dataset.gallery,scope=a.closest('.qbody')||document;
+  gal=g?$$(`a.zoomable[data-gallery="${g}"]`,scope):[a];
+  lb.classList.add('open');lb.setAttribute('aria-hidden','false');show(gal.indexOf(a));$('.lb-close',lb).focus();});
+$('.lb-close',lb).addEventListener('click',closeLb);
+$('.lb-prev',lb).addEventListener('click',()=>show(gi-1));
+$('.lb-next',lb).addEventListener('click',()=>show(gi+1));
+lb.addEventListener('click',e=>{if(e.target===lb)closeLb();});
+document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLb();if(e.key==='ArrowLeft')show(gi-1);if(e.key==='ArrowRight')show(gi+1);});
+let sx=null;
+lbImg.addEventListener('pointerdown',e=>{sx=e.clientX;});
+lbImg.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>50)show(gi+(dx<0?1:-1));});
+</script>
+</body>
+</html>
