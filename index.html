@@ -121,7 +121,7 @@ input.num{width:76px;text-align:right;padding:7px 9px;border:1px solid var(--lin
 .opt{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--line);border-radius:8px;margin:0 0 8px;cursor:pointer;background:var(--surface);transition:background .15s,border-color .15s}
 .opt:hover{border-color:var(--brand)}
 .opt:has(input:checked){background:var(--brand-soft);border-color:var(--brand)}
-.opt input,.cell input,.chip-opt input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.opt input[type=radio],.opt input[type=checkbox],.cell input,.chip-opt input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
 .opt .lbl{flex:1 1 auto}
 .fir{flex:none;width:20px;height:20px;border:2px solid var(--muted);border-radius:50%;display:inline-grid;place-items:center;background:var(--surface)}
 input[type=checkbox]+.fir{border-radius:5px}
