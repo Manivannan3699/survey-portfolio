@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Manivannan K – Survey Programming Portfolio</title>
 <meta name="description" content="Live desktop and mobile demos of custom Decipher survey question types: grids, autosum, sliders, ranking, hybrid grids, patient charts, MaxDiff and more.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('pf-theme')||'light';}catch(e){document.documentElement.dataset.theme='light';}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -65,6 +66,7 @@ button{font:inherit;color:inherit}
 .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;white-space:nowrap;text-decoration:none;color:var(--text);border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.88rem;font-weight:600}
+.theme-btn{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:8px;width:38px;height:34px;cursor:pointer;font-size:1rem;line-height:1}
 .chip.active{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
 .seg{flex:none;display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
 .seg button{border:0;background:none;padding:6px 12px;font-weight:600;font-size:.88rem;cursor:pointer;color:var(--muted)}
@@ -332,6 +334,111 @@ input:focus-visible+.fir{outline:2px solid var(--brand);outline-offset:2px}
 .promise li::before{content:"✓ ";color:var(--ok)}
 .cta .next{display:inline-block;text-decoration:none}
 
+/* Step label for multi-screen demos */
+.step{font-size:.85rem;color:var(--muted);margin:0 0 10px}
+.pp-back{display:block;margin-top:12px}
+
+/* Data quality report */
+.dq-rep{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.dq-rep span{border-radius:999px;padding:4px 12px;font-size:.85rem;font-weight:600}
+.dq-rep .pass{color:var(--ok);background:var(--ok-soft)}
+.dq-rep .flag{color:var(--err);background:var(--err-soft)}
+
+/* Van Westendorp */
+.vw-row{display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:center;padding:12px 8px;border-top:1px solid var(--line)}
+.vw-row:first-child{border-top:0}
+.vw-in{display:flex;align-items:center;gap:6px}
+.vw-in .cur{color:var(--muted);font-weight:700}
+.vw-in input{width:100px}
+.vw-msg{grid-column:1/-1;font-size:.86rem;color:var(--err);font-weight:600}
+.vw-msg:empty{display:none}
+.vw-row.bad{background:var(--err-soft)}
+.vw-row.bad input{border-color:var(--err)}
+@container sv (max-width:600px){.vw-row{grid-template-columns:1fr}}
+
+/* Treatment journey */
+.tj{display:grid;grid-template-columns:72px minmax(130px,1.1fr) minmax(170px,1.3fr) minmax(190px,1.5fr) minmax(140px,1.1fr);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tj-h{background:var(--brand);color:var(--brand-ink);font-weight:600;font-size:.85rem;padding:8px;text-align:center}
+.tj-row{display:contents}
+.tj-c{padding:8px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px;justify-content:center;background:var(--surface)}
+.tj-c.l{font-weight:700;align-items:center;background:var(--surface-2)}
+.tj-c .chip-opt{align-self:flex-start}
+.tj-row.miss .tj-c{background:var(--err-soft)}
+.tj .ml{display:none}
+.tj select{width:100%}
+.tj-actions{display:flex;align-items:center;gap:16px;margin-top:12px}
+.addl{border:1px dashed var(--brand);color:var(--brand);background:none;border-radius:6px;padding:8px 14px;font-weight:600;cursor:pointer}
+@container sv (max-width:600px){
+  .tj{display:block;border:0;overflow:visible}
+  .tj-h{display:none}
+  .tj-row{display:block;border:1px solid var(--line);border-radius:8px;margin-bottom:10px;overflow:hidden}
+  .tj-row.miss{border-color:var(--err)}
+  .tj-c{border-top:0;padding:6px 12px}
+  .tj-c.l{align-items:flex-start;background:var(--brand);color:var(--brand-ink);padding:8px 12px;margin-bottom:4px}
+  .tj-row.miss .tj-c.l{background:var(--err);color:#fff}
+  .tj-c:last-child{padding-bottom:12px}
+  .tj .ml{display:block;font-weight:600;font-size:.88rem}
+}
+
+/* Highlighter mode switch */
+.hl-mode{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:0 0 12px;background:var(--surface)}
+.hl-mode button{border:0;background:none;padding:7px 16px;font-weight:600;cursor:pointer}
+.hl-mode button+button{border-left:1px solid var(--line)}
+.hl-mode [data-m="pos"][aria-pressed="true"]{background:var(--ok);color:var(--surface)}
+.hl-mode [data-m="neg"][aria-pressed="true"]{background:var(--err);color:var(--surface)}
+
+/* Image highlighter */
+.ih{position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--line);cursor:crosshair;touch-action:manipulation}
+.ih img{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;pointer-events:none}
+.pin{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2px solid #fff;display:grid;place-items:center;font-size:1rem;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.35);padding:0}
+.pin.pos{background:#16703f}
+.pin.neg{background:#b3261e}
+
+/* Text highlighter */
+.th-text{font-size:1.08rem;line-height:2.1;margin:0 0 12px;user-select:none;-webkit-user-select:none}
+.th-w{cursor:pointer;border-radius:4px;padding:3px 1px}
+.th-w.pos{background:var(--ok-soft);box-shadow:inset 0 -2px 0 var(--ok)}
+.th-w.neg{background:var(--err-soft);box-shadow:inset 0 -2px 0 var(--err)}
+.hl-sum{font-size:.92rem;display:grid;gap:4px}
+
+/* Table (TPP) highlighter */
+.tt-wrap{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tt{width:100%;border-collapse:collapse}
+.tt thead th{background:var(--brand);color:var(--brand-ink);font-size:.85rem;padding:8px 12px;text-align:left}
+.tt tbody th{width:28%;text-align:left;padding:10px 12px;background:var(--surface-2);border-top:1px solid var(--line);vertical-align:top;font-weight:600}
+.tt td{border-top:1px solid var(--line);padding:4px}
+.tt-c{display:block;width:100%;text-align:left;border:0;background:transparent;padding:8px 10px;border-radius:6px;cursor:pointer;line-height:1.4}
+.tt-c:hover{background:var(--surface-2)}
+.tt-c.pos{background:var(--ok-soft);box-shadow:inset 4px 0 0 var(--ok)}
+.tt-c.neg{background:var(--err-soft);box-shadow:inset 4px 0 0 var(--err)}
+.tt-c.pos::after{content:" 👍"}
+.tt-c.neg::after{content:" 👎"}
+@container sv (max-width:600px){
+  .tt thead{display:none}
+  .tt tbody tr{display:block;border-top:1px solid var(--line)}
+  .tt tbody tr:first-child{border-top:0}
+  .tt tbody th{display:block;width:auto;border:0;padding:8px 12px 2px;background:transparent;font-size:.85rem;color:var(--muted)}
+  .tt td{display:block;border:0;padding:0 4px 6px}
+}
+
+/* Popup: three kinds of content */
+.thumbs3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@container sv (max-width:600px){.thumbs3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.lb-stage{width:100%;height:100%;display:flex;align-items:center;justify-content:center;min-width:0}
+.lb .lb-stage img{width:100%;height:100%;max-width:900px;max-height:100%;object-fit:contain;border-radius:0}
+.lb-html{background:var(--surface);color:var(--text);border-radius:10px;padding:16px;max-height:100%;overflow:auto;max-width:640px;width:100%}
+.lb-html h3{margin:0 0 10px;font-size:1.1rem}
+.lb-html table{border-collapse:collapse;width:100%}
+.lb-html th,.lb-html td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.lb-html th{background:var(--surface-2);width:30%}
+.vp{width:min(100vw - 24px,720px);background:#000;border-radius:8px;overflow:hidden}
+.vp canvas{display:block;width:100%;height:auto}
+.vp-ctl{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#111;color:#fff}
+.lb .vp-play{position:static;transform:none;width:36px;height:36px;font-size:.95rem;flex:none}
+.vp-bar{flex:1;height:5px;background:#444;border-radius:3px;overflow:hidden}
+.vp-bar span{display:block;height:100%;width:0;background:#3ec1a6}
+.vp-time{font-size:.85rem;font-variant-numeric:tabular-nums}
+
 /* Slider */
 .sl-track{position:relative;padding-top:38px}
 .sl-val{position:absolute;top:0;transform:translateX(-50%);background:var(--brand);color:var(--brand-ink);font-weight:700;padding:2px 10px;border-radius:6px;font-size:.9rem;white-space:nowrap}
@@ -501,6 +608,8 @@ footer p{margin:0 0 6px}
       <li>Decipher / Forsta XML</li>
       <li>Custom JS, CSS and HTML question types</li>
       <li>Desktop and mobile layouts</li>
+      <li>Image, video and HTML popups</li>
+      <li>Highlighters and heatmaps</li>
       <li>Logic, piping and quotas</li>
       <li>Multi-country setups</li>
       <li>Survey QC and testing</li>
@@ -523,6 +632,7 @@ footer p{margin:0 0 6px}
     <button type="button" data-mode="desktop">Desktop</button><button type="button" data-mode="mobile">Mobile</button>
   </div>
   <nav class="chips" id="nav" aria-label="Question types"></nav>
+  <button type="button" class="theme-btn" id="themeBtn" aria-label="Switch to dark theme">🌙</button>
 </div>
 
 <main id="demos"></main>
@@ -549,9 +659,9 @@ footer p{margin:0 0 6px}
 
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer" aria-hidden="true">
   <button class="lb-close" type="button" aria-label="Close">✕</button>
-  <button class="lb-prev" type="button" aria-label="Previous image">‹</button>
-  <img alt="">
-  <button class="lb-next" type="button" aria-label="Next image">›</button>
+  <button class="lb-prev" type="button" aria-label="Previous">‹</button>
+  <div class="lb-stage"></div>
+  <button class="lb-next" type="button" aria-label="Next">›</button>
   <div class="lb-cap"></div>
 </div>
 
@@ -588,6 +698,37 @@ function wireSlider(w,onTouch){
   return{get touched(){return !w.classList.contains('untouched');},get value(){return r.value;},
     reset(){w.classList.add('untouched');r.value=def;o.textContent='Move the slider';upd();}};
 }
+function gridHTML(name,rows,cols){
+  return `<div class="grid" style="grid-template-columns:minmax(150px,1.7fr) repeat(${cols.length},minmax(0,1fr))"><div class="ghead"><div></div>${cols.map(c=>`<div>${c}</div>`).join('')}</div>${rows.map(([k,r],i)=>`<div class="grow${i%2?' alt':''}" data-r="${k}"><div class="rlabel">${r}</div><div class="gcells">${cols.map((c,j)=>`<label class="cell"><input type="radio" name="${name}${k}" value="${j+1}" aria-label="${r}: ${c}"><span class="fir" aria-hidden="true"></span><span class="clbl">${c}</span></label>`).join('')}</div></div>`).join('')}</div>`;
+}
+const TPP=[['Indication','Adults with moderate-to-severe disease'],['Efficacy','62% of patients reached the main goal at week 16'],['Safety','Most common side effects: mild headache and nausea'],['Dosing','One tablet, once daily'],['Monitoring','No routine lab tests needed'],['Price','Similar to current branded options']];
+const modeHTML='<div class="hl-mode" role="group" aria-label="Highlight mode"><button type="button" data-m="pos" aria-pressed="true">👍 Like</button><button type="button" data-m="neg" aria-pressed="false">👎 Dislike</button></div>';
+function wireMode(b){let m='pos';$('.hl-mode',b).addEventListener('click',e=>{const x=e.target.closest('button');if(!x)return;m=x.dataset.m;$$('.hl-mode button',b).forEach(y=>y.setAttribute('aria-pressed',y===x));});return()=>m;}
+function svgURI(x){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(x);}
+function adSVG(){return svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" font-family="Arial,sans-serif"><rect width="600" height="400" fill="#fdf6ec"/><rect width="600" height="56" fill="#2f6f9f"/><text x="24" y="37" font-size="22" font-weight="700" fill="#fff">FreshBox</text><text x="576" y="36" text-anchor="end" font-size="15" fill="#fff">Free delivery</text><circle cx="170" cy="215" r="110" fill="#f2b134"/><circle cx="170" cy="215" r="80" fill="#fff"/><circle cx="145" cy="200" r="22" fill="#3d8b4f"/><circle cx="195" cy="225" r="18" fill="#a33b2f"/><circle cx="165" cy="248" r="14" fill="#f08a5d"/><text x="320" y="150" font-size="30" font-weight="700" fill="#15233a">Dinner, sorted.</text><text x="320" y="185" font-size="17" fill="#55627a">Chef recipes delivered weekly</text><rect x="320" y="212" width="130" height="44" rx="22" fill="#a33b2f"/><text x="385" y="240" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">$8 / serving</text><rect x="320" y="282" width="200" height="50" rx="8" fill="#2f6f9f"/><text x="420" y="313" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">Order now</text><text x="300" y="386" text-anchor="middle" font-size="11" fill="#8a94a6">Terms apply. New customers only.</text></svg>`);}
+function videoThumb(){return svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" font-family="Arial,sans-serif"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d3c8f"/><stop offset="1" stop-color="#3ec1a6"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/><rect x="70" y="60" width="90" height="150" rx="12" fill="#fff" opacity=".9"/><circle cx="250" cy="135" r="38" fill="rgba(0,0,0,.45)"/><path d="M238 115v40l34-20z" fill="#fff"/><text x="200" y="278" font-size="22" font-weight="700" fill="#fff" text-anchor="middle">Launch video</text></svg>`);}
+function tableThumb(){return svgURI(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" font-family="Arial,sans-serif"><rect width="400" height="300" fill="#eef2f6"/><rect x="50" y="40" width="300" height="180" rx="8" fill="#fff" stroke="#c9d2de"/><rect x="50" y="40" width="300" height="32" rx="8" fill="#1f5fae"/>${[0,1,2,3].map(i=>`<line x1="50" x2="350" y1="${102+i*30}" y2="${102+i*30}" stroke="#d9e0e9"/>`).join('')}<line x1="140" x2="140" y1="72" y2="220" stroke="#d9e0e9"/><text x="200" y="278" font-size="22" font-weight="700" fill="#15233a" text-anchor="middle">Product profile</text></svg>`);}
+function makePlayer(a){
+  const D=8,wrap=document.createElement('div');wrap.className='vp';
+  wrap.innerHTML='<canvas width="640" height="360" aria-label="Launch video"></canvas><div class="vp-ctl"><button type="button" class="vp-play" aria-label="Play">▶</button><div class="vp-bar"><span></span></div><span class="vp-time"></span></div>';
+  const cv=$('canvas',wrap),ctx=cv.getContext('2d'),btn=$('.vp-play',wrap);let t=a._t||0,playing=false,last=0,raf=0;
+  const rr=(x,y,w,h,r)=>{ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.fill();};
+  const draw=()=>{const g=ctx.createLinearGradient(0,0,640,360);g.addColorStop(0,'#6d3c8f');g.addColorStop(1,'#3ec1a6');ctx.fillStyle=g;ctx.fillRect(0,0,640,360);
+    const px=-160+Math.min(t/2,1)*280,sc=1+.04*Math.sin(t*3);
+    ctx.save();ctx.translate(px+70,180);ctx.scale(sc,sc);ctx.fillStyle='#fff';rr(-60,-100,120,200,16);ctx.fillStyle='#3ec1a6';rr(-44,-80,88,26,6);
+    ctx.beginPath();ctx.arc(0,10,32,0,Math.PI*2);ctx.fillStyle='#6d3c8f';ctx.fill();ctx.restore();
+    ctx.fillStyle='#fff';ctx.textAlign='left';
+    const line=(txt,at,y,size)=>{if(t<at)return;ctx.globalAlpha=Math.min((t-at)/.6,1);ctx.font=`700 ${size}px Arial,sans-serif`;ctx.fillText(txt,300,y);ctx.globalAlpha=1;};
+    line('Design B',2,140,44);line('Now with 30% less plastic',4,190,24);line('Coming soon',6,240,24);};
+  const ui=()=>{btn.textContent=playing?'❚❚':'▶';btn.setAttribute('aria-label',playing?'Pause':'Play');$('.vp-bar span',wrap).style.width=t/D*100+'%';$('.vp-time',wrap).textContent=`0:0${Math.floor(t)} / 0:0${D}`;};
+  const tick=ts=>{if(!playing)return;if(last)t+=(ts-last)/1000;last=ts;
+    if(t>=D){t=D;playing=false;a.classList.add('seen');const z=$('.zm',a);if(z)z.textContent='✓ Watched';}
+    a._t=t;draw();ui();if(playing)raf=requestAnimationFrame(tick);};
+  wrap.play=()=>{if(t>=D)t=0;playing=true;last=0;raf=requestAnimationFrame(tick);ui();};
+  wrap.stop=()=>{playing=false;cancelAnimationFrame(raf);ui();};
+  btn.addEventListener('click',()=>playing?wrap.stop():wrap.play());
+  draw();ui();return wrap;
+}
 function tileSVG(name,c1,c2){
   return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 190"><rect width="300" height="190" fill="${c1}"/><path d="M110 30h80l12 130H98z" fill="#fff" opacity=".93"/><rect x="112" y="48" width="76" height="18" rx="4" fill="${c2}"/><circle cx="150" cy="108" r="24" fill="${c2}" opacity=".85"/><circle cx="240" cy="40" r="46" fill="${c2}" opacity=".22"/></svg>`);
 }
@@ -619,6 +760,38 @@ const DEMOS=[
   return()=>{const c=$$('input[name=q2]:checked',b);
    if(!c.length)return{error:'Please select at least one answer.'};
    return{data:c.map(i=>`Q2${i.value}=1`).join('; ')};};
+ }},
+{id:'piping',short:'Piping',title:'Piping and dynamic rows',
+ tags:['Answers carried forward','Rows built from earlier answers','Skips when nothing applies'],
+ how:'Brands picked in the first question become the rows of the second, in the same order, and their names are piped into the question text. A single brand gets a simple list instead of a grid, and “None” skips the follow-up entirely.',
+ q:'',inst:'',
+ build(b){
+  const brands=['Brand A','Brand B','Brand C','Brand D','Brand E','Brand F'];
+  const scale=['Very dissatisfied','Dissatisfied','Neutral','Satisfied','Very satisfied'];
+  const sv=b.closest('.survey'),qt=$('.qtext',sv),qi=$('.qinst',sv);let step=1,picked=[];
+  const join=a=>a.length<2?a[0]:a.slice(0,-1).join(', ')+' and '+a[a.length-1];
+  const draw1=()=>{step=1;qt.textContent='Which of these brands have you bought in the past 6 months?';qi.textContent='Select all that apply.';
+   b.innerHTML='<div class="step">Question 1 of 2</div>'+brands.map((t,i)=>optRow('checkbox','pp',`r${i+1}`,t)).join('')+optRow('checkbox','pp','r99','None of these');};
+  const draw2=()=>{step=2;const names=picked.map(x=>x[1]),one=picked.length===1;
+   qt.textContent=one?`You said you bought ${names[0]}. How satisfied are you with it?`:`You said you bought ${join(names)}. How satisfied are you with each?`;
+   qi.textContent=one?'Please select one.':'Please select one answer for each brand.';
+   b.innerHTML='<div class="step">Question 2 of 2</div>'+(one?scale.map((t,k)=>optRow('radio','pq',k+1,t)).join(''):gridHTML('pq',picked,scale))+'<button type="button" class="link pp-back">‹ Back to question 1</button>';};
+  draw1();
+  b.addEventListener('change',e=>{const t=e.target;
+   if(t.name==='pp'&&t.checked)$$('input[name=pp]',b).forEach(i=>{if(i!==t&&(t.value==='r99'||i.value==='r99'))i.checked=false;});
+   const g=t.closest('.grow');if(g)g.classList.remove('miss');});
+  b.addEventListener('click',e=>{if(!e.target.closest('.pp-back'))return;const keep=picked.map(x=>x[0]);draw1();
+   keep.forEach(k=>{const i=$(`input[name=pp][value="${k}"]`,b);if(i)i.checked=true;});});
+  return()=>{
+   if(step===1){const c=$$('input[name=pp]:checked',b);
+    if(!c.length)return{error:'Please select at least one answer.'};
+    if(c[0].value==='r99')return{data:'QP1r99=1; QP2 skipped (no brands bought)'};
+    picked=c.map(i=>[i.value,brands[+i.value.slice(1)-1]]);draw2();return{advance:true};}
+   const q1=picked.map(x=>`QP1${x[0]}=1`).join('; ');
+   if(picked.length===1){const v=$('input[name=pq]:checked',b);if(!v)return{error:'Please select an answer.'};return{data:`${q1}; QP2${picked[0][0]}=${v.value}`};}
+   let miss=0;const d=[];
+   $$('.grow',b).forEach(g=>{const v=$('input:checked',g);g.classList.toggle('miss',!v);if(!v)miss++;else d.push(`QP2${g.dataset.r}=${v.value}`);});
+   return miss?{error:`Please answer the highlighted ${miss>1?'rows':'row'}.`}:{data:`${q1}; ${d.join('; ')}`};};
  }},
 {id:'columns',short:'Column layouts',title:'Single and multi-column answer layouts',
  tags:['Layout','1, 2 or 3 columns','Single column on phones'],
@@ -804,6 +977,27 @@ const DEMOS=[
     $('.zs-msg',b).innerHTML=txt('popupMsg1','It looks like you haven’t entered any values for: ')+zeros.map(ci=>cols[ci].l).join(', ')+txt('popupMsg2','.<br>Do you want to go back and fill them in, or continue as is?');
     cur=sc.indexOf(zeros[0]);showCard();zs.hidden=false;$('.zs-go',b).focus();return{advance:true};}
    return{data:data()};};
+ }},
+{id:'vw',short:'Van Westendorp',title:'Van Westendorp price questions with live checks',
+ tags:['Price sensitivity','Each price above the last','Live error messages','Thousands separators'],
+ how:'Four price questions on one screen. Each answer has to be higher than the one before it, and a mistake is flagged right under the box as soon as it’s typed, quoting the respondent’s own earlier price. Numbers get thousands separators as they’re typed.',
+ q:'Thinking about a monthly subscription to this meal-kit service:',inst:'Please enter a price in dollars for each question.',
+ build(b){
+  const Q=[['tc','At what price would it be so cheap that you’d doubt its quality?','“too cheap”'],
+   ['bg','At what price would it be a bargain, a great buy for the money?','“bargain”'],
+   ['ex','At what price would it start to seem expensive, but still worth considering?','“getting expensive”'],
+   ['te','At what price would it be so expensive that you wouldn’t consider it?','“too expensive”']];
+  b.innerHTML=Q.map(([k,l])=>`<div class="vw-row"><label for="vw${k}">${l}</label><span class="vw-in"><span class="cur">$</span><input class="num" id="vw${k}" inputmode="numeric" autocomplete="off" maxlength="6"></span><div class="vw-msg" aria-live="polite"></div></div>`).join('');
+  const ins=$$('input',b),fmt=n=>n.toLocaleString('en-US');
+  const val=i=>{const v=ins[i].value.replace(/\D/g,'');return v===''?null:+v;};
+  const check=()=>{const bad=[];ins.forEach((inp,i)=>{const row=inp.closest('.vw-row'),v=val(i);let msg='';
+    if(v!==null)for(let j=i-1;j>=0;j--){const pv=val(j);if(pv!==null){if(v<=pv)msg=`Must be higher than $${fmt(pv)}, your ${Q[j][2]} price.`;break;}}
+    $('.vw-msg',row).textContent=msg;row.classList.toggle('bad',!!msg);if(msg)bad.push(i);});return bad;};
+  b.addEventListener('input',e=>{const t=e.target,d=t.value.replace(/\D/g,'').slice(0,5);t.value=d?fmt(+d):'';check();});
+  return()=>{const empty=ins.map((x,i)=>val(i)===null?i:-1).filter(i=>i>-1);
+   if(empty.length){check();empty.forEach(i=>ins[i].closest('.vw-row').classList.add('bad'));return{error:'Please enter a price for every question.'};}
+   if(check().length)return{error:'Each price must be higher than the one before it. Please fix the highlighted boxes.'};
+   return{data:Q.map(([k],i)=>`QV_${k}=${val(i)}`).join('; ')};};
  }},
 {id:'slider',short:'Slider',title:'0–10 slider that has to be moved',
  tags:['Slider','Untouched check','Touch friendly'],
@@ -1003,6 +1197,45 @@ const DEMOS=[
     if(ageErr)m+=' Age must be between 18 and 99.';if(dateErr)m+=' The diagnosis date can’t be in the future.';return{error:m};}
    return{data:out.join(' | ')};};
  }},
+{id:'journey',short:'Treatment journey',title:'Treatment journey grid with date logic',
+ tags:['Lines of therapy','Add or remove lines','Date order checks','“Ongoing” clears the end date'],
+ how:'Doctors record each line of therapy for a patient: regimen, start and end month, and why it stopped. Lines can be added or removed. The checks make sure every end date comes after its start, a new line doesn’t start before the previous one ended, only the latest line can be ongoing, and no date is in the future. Ticking “Ongoing” clears the end date and reason instead of locking them.',
+ q:'Please record this patient’s treatment history, starting with first line.',inst:'Use one row for each line of therapy.',
+ build(b){
+  const MAXL=4,now=new Date(),cy=now.getFullYear(),cm=now.getMonth()+1;
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const years=[];for(let y=cy;y>=cy-10;y--)years.push(y);
+  const regs=['Regimen A','Regimen B','Regimen C','Regimen D','Other'],reasons=['Progression','Side effects','Cost or access','Patient choice','Other'];
+  const sel=(k,opts,ph,aria)=>`<select data-k="${k}" aria-label="${aria}"><option value="">${ph}</option>${opts.map((o,i)=>`<option value="${i+1}">${o}</option>`).join('')}</select>`;
+  const my=(k,n,lab)=>`<div class="my">${sel(k+'m',months,'Month',`Line ${n}: ${lab} month`)}<select data-k="${k}y" aria-label="Line ${n}: ${lab} year"><option value="">Year</option>${years.map(y=>`<option>${y}</option>`).join('')}</select></div>`;
+  const rowHTML=n=>`<div class="tj-row" data-n="${n}"><div class="tj-c l">Line ${n}</div><div class="tj-c"><span class="ml">Regimen</span>${sel('reg',regs,'Select…',`Line ${n}: regimen`)}</div><div class="tj-c"><span class="ml">Start</span>${my('s',n,'start')}</div><div class="tj-c"><span class="ml">End</span>${my('e',n,'end')}<label class="chip-opt"><input type="checkbox" data-k="on">Ongoing</label></div><div class="tj-c"><span class="ml">Reason stopped</span>${sel('why',reasons,'Select…',`Line ${n}: reason stopped`)}</div></div>`;
+  b.innerHTML=`<div class="tj"><div class="tj-h">Line</div><div class="tj-h">Regimen</div><div class="tj-h">Start</div><div class="tj-h">End</div><div class="tj-h">Reason stopped</div>${rowHTML(1)}${rowHTML(2)}</div><div class="tj-actions"><button type="button" class="addl tj-add">+ Add line</button><button type="button" class="link tj-del">Remove last line</button></div>`;
+  const tj=$('.tj',b),lines=()=>$$('.tj-row',tj);
+  const btns=()=>{$('.tj-add',b).hidden=lines().length>=MAXL;$('.tj-del',b).hidden=lines().length<=1;};
+  btns();
+  b.addEventListener('click',e=>{
+   if(e.target.closest('.tj-add')&&lines().length<MAXL){tj.insertAdjacentHTML('beforeend',rowHTML(lines().length+1));btns();}
+   if(e.target.closest('.tj-del')&&lines().length>1){lines().pop().remove();btns();}});
+  b.addEventListener('change',e=>{const t=e.target,row=t.closest('.tj-row');if(!row)return;row.classList.remove('miss');const k=t.dataset.k;
+   if(k==='on'&&t.checked)['em','ey','why'].forEach(x=>{$(`[data-k="${x}"]`,row).value='';});
+   if(['em','ey','why'].includes(k)&&t.value)$('[data-k="on"]',row).checked=false;});
+  const g=(row,k)=>$(`[data-k="${k}"]`,row).value;
+  return()=>{const rs=lines(),msgs=new Set(),bad=new Set(),out=[],nowv=cy*12+cm;let prevEnd=null;
+   rs.forEach((row,i)=>{const n=i+1,on=$('[data-k="on"]',row).checked;
+    const reg=g(row,'reg'),sm=g(row,'sm'),sy=g(row,'sy'),em=g(row,'em'),ey=g(row,'ey'),why=g(row,'why');
+    const flag=m=>{msgs.add(m);bad.add(row);};
+    if(!reg||!sm||!sy)flag('Please complete the regimen and start date for every line.');
+    if(!on&&(!em||!ey||!why))flag('Please give an end date and reason, or tick “Ongoing”.');
+    if(on&&i<rs.length-1)flag('Only the latest line can be ongoing.');
+    const st=sm&&sy?(+sy)*12+(+sm):null,en=em&&ey?(+ey)*12+(+em):null;
+    if((st&&st>nowv)||(en&&en>nowv))flag('Dates can’t be in the future.');
+    if(st&&en&&en<st)flag('An end date can’t be before its start date.');
+    if(st&&prevEnd&&st<prevEnd)flag('A line can’t start before the previous line ended.');
+    prevEnd=on?null:en;
+    out.push(`L${n}: reg=${reg||'-'}, start=${sm?sm.padStart(2,'0'):'--'}/${sy||'----'}, end=${on?'ongoing':`${em?em.padStart(2,'0'):'--'}/${ey||'----'}, reason=${why||'-'}`}`);});
+   rs.forEach(r=>r.classList.toggle('miss',bad.has(r)));
+   return msgs.size?{error:[...msgs].join(' ')}:{data:out.join(' | ')};};
+ }},
 {id:'cardsort',short:'Card sort',title:'Card sort, one card at a time',
  tags:['Card sort','Undo','Progress counter'],
  how:'Each statement appears as a card. One tap files it into a box and brings up the next card. Respondents can undo, and the counter shows how many are left.',
@@ -1056,17 +1289,71 @@ const DEMOS=[
   none.addEventListener('change',()=>{if(none.checked){v=null;paint();}});
   return()=>{if(none.checked)return{data:'Q15=99'};if(!v)return{error:'Please choose one option, or select “None”.'};return{data:`Q15=${v}`};};
  }},
-{id:'popup',short:'Image popup',title:'Image gallery popup with view tracking',
- tags:['Zoomable images','Gallery navigation','Must view all'],
- how:'Thumbnails open a full-screen gallery that respondents can swipe or step through. The page records which images were opened, and the question only accepts an answer once every image has been viewed.',
- q:'Please look at both pack designs. Overall, how appealing are they?',inst:'Tap an image to enlarge it.',
+{id:'popup',short:'Popups',title:'Image, video and HTML table popups',
+ tags:['Image zoom','Video with must-watch','HTML table popup','One swipeable gallery'],
+ how:'One popup handles images, videos and HTML content such as a product profile table, all opened from the usual zoomable links and grouped into one gallery that respondents can swipe or step through. The question tracks what was opened: the image and the table must be viewed, and the video must be watched to the end (no skipping ahead) before Continue accepts an answer.',
+ q:'Please review the pack design, the launch video and the product profile. Overall, how appealing is this product?',inst:'Tap each item to open it.',
  build(b){
-  const imgs=[['Design A','#2f6f9f','#f2b134'],['Design B','#6d3c8f','#3ec1a6']];
-  b.innerHTML=`<div class="thumbs">${imgs.map(([n,c1,c2])=>{const u=conceptSVG(n,c1,c2);return `<a class="zoomable" href="${u}" data-gallery="q16" data-caption="${n}"><img src="${u}" alt="${n} pack concept"><span class="zm">Tap to view</span></a>`;}).join('')}</div><div class="scale">${['Not at all','Slightly','Moderately','Very','Extremely'].map((t,k)=>optRow('radio','q16',k+1,t,'','col')).join('')}</div>`;
-  return()=>{const unseen=$$('.zoomable:not(.seen)',b).length;
-   if(unseen)return{error:`Please view ${unseen>1?'both designs':'the remaining design'} before answering.`};
-   const v=$('input[name=q16]:checked',b);if(!v)return{error:'Please select how appealing the designs are.'};
-   return{data:`Q16=${v.value}; Q16_viewedA=1; Q16_viewedB=1`};};
+  const tpp=`<h3>Product X: target product profile</h3><table>${TPP.map(([k,v])=>`<tr><th>${k}</th><td>${v}</td></tr>`).join('')}</table>`;
+  b.innerHTML=`<template id="tpl-tpp">${tpp}</template><div class="thumbs thumbs3">
+   <a class="zoomable" href="${conceptSVG('Design B','#6d3c8f','#3ec1a6')}" data-gallery="q16" data-type="image" data-caption="Pack design"><img src="${conceptSVG('Design B','#6d3c8f','#3ec1a6')}" alt="Pack design"><span class="zm">Tap to view</span></a>
+   <a class="zoomable" href="#" data-gallery="q16" data-type="video" data-caption="Launch video"><img src="${videoThumb()}" alt="Launch video"><span class="zm">Tap to watch</span></a>
+   <a class="zoomable" href="#" data-gallery="q16" data-type="html" data-src="tpl-tpp" data-caption="Product profile"><img src="${tableThumb()}" alt="Product profile table"><span class="zm">Tap to view</span></a>
+  </div><div class="scale">${['Not at all','Slightly','Moderately','Very','Extremely'].map((t,k)=>optRow('radio','q16',k+1,t,'','col')).join('')}</div>`;
+  return()=>{const un=$$('.zoomable:not(.seen)',b).map(a=>a.dataset.type==='video'?'watch the video to the end':`open the ${a.dataset.caption.toLowerCase()}`);
+   if(un.length)return{error:`Please ${un.length>1?un.slice(0,-1).join(', ')+' and '+un[un.length-1]:un[0]} before answering.`};
+   const v=$('input[name=q16]:checked',b);if(!v)return{error:'Please select how appealing the product is.'};
+   return{data:`Q16=${v.value}; Q16_image_viewed=1; Q16_video_completed=1; Q16_table_viewed=1`};};
+ }},
+{id:'imghl',short:'Image highlighter',title:'Image highlighter (click heatmap)',
+ tags:['Like / dislike pins','Up to 3 of each','Positions saved as %'],
+ how:'Respondents tap areas of an ad or pack they like or dislike, and a pin drops on each spot. Tapping a pin removes it. Each pin is saved as x/y percentages, so clicks from every respondent can be combined into one heatmap whatever screen size they used.',
+ q:'Please tap anything you like or dislike in this advert.',inst:'Pick 👍 or 👎, then tap the image. Up to 3 of each.',
+ build(b){
+  const MAX=3,pins=[];
+  b.innerHTML=modeHTML+`<div class="ih"><img src="${adSVG()}" alt="Advert for a meal-kit service" draggable="false"></div><p class="hint" aria-live="polite"></p>`;
+  const mode=wireMode(b),box=$('.ih',b),hint=$('.hint',b);
+  const draw=()=>{$$('.pin',box).forEach(x=>x.remove());pins.forEach((p,i)=>box.insertAdjacentHTML('beforeend',`<button type="button" class="pin ${p.m}" data-i="${i}" style="left:${p.x}%;top:${p.y}%" aria-label="Remove ${p.m==='pos'?'like':'dislike'} pin">${p.m==='pos'?'👍':'👎'}</button>`));};
+  box.addEventListener('click',e=>{hint.textContent='';const pin=e.target.closest('.pin');
+   if(pin){pins.splice(+pin.dataset.i,1);draw();return;}
+   const r=box.getBoundingClientRect(),m=mode();
+   if(pins.filter(p=>p.m===m).length>=MAX){hint.textContent=`You’ve placed ${MAX} ${m==='pos'?'likes':'dislikes'}. Tap a pin to remove it first.`;return;}
+   pins.push({m,x:+((e.clientX-r.left)/r.width*100).toFixed(1),y:+((e.clientY-r.top)/r.height*100).toFixed(1)});draw();});
+  return()=>{if(!pins.length)return{error:'Please tap at least one area you like or dislike.'};
+   const n={pos:0,neg:0};return{data:pins.map(p=>`QH_${p.m==='pos'?'like':'dislike'}${++n[p.m]}=x${p.x},y${p.y}`).join('; ')};};
+ }},
+{id:'txthl',short:'Text highlighter',title:'Text highlighter for concept statements',
+ tags:['Like / dislike highlighting','Tap or drag across words','Saved as readable phrases'],
+ how:'Respondents switch between Like and Dislike, then tap words (or drag across them with a mouse) to colour them. Tapping a highlighted word clears it. Words next to each other are joined into phrases, so the data holds readable text instead of word numbers.',
+ q:'Please highlight anything you like or dislike in this product description.',inst:'Pick 👍 or 👎, then tap words to highlight them.',
+ build(b){
+  const words='Meet FreshBox, the meal kit that brings chef-designed recipes to your door every week. Every box uses locally sourced ingredients and plastic-free packaging. Plans start at $8 per serving, and you can skip or cancel any week with no fees.'.split(' ');
+  b.innerHTML=modeHTML+`<p class="th-text">${words.map((w,i)=>`<span class="th-w" data-i="${i}">${w}</span>`).join(' ')}</p><div class="hl-sum" aria-live="polite"></div>`;
+  const mode=wireMode(b),st=words.map(()=>''),p=$('.th-text',b);
+  const phrases=k=>{const out=[];let cur=[];st.forEach((v,i)=>{if(v===k)cur.push(words[i]);else if(cur.length){out.push(cur.join(' '));cur=[];}});if(cur.length)out.push(cur.join(' '));return out.map(x=>x.replace(/[.,]$/,''));};
+  const paint=()=>{$$('.th-w',p).forEach(x=>{x.className='th-w'+(st[x.dataset.i]?' '+st[x.dataset.i]:'');});
+   $('.hl-sum',b).innerHTML=[['pos','👍 Liked'],['neg','👎 Disliked']].map(([k,l])=>{const ph=phrases(k);return ph.length?`<div><b>${l}:</b> ${ph.map(x=>`“${x}”`).join(', ')}</div>`:'';}).join('');};
+  let drag=null,suppress=false;
+  p.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;const w=e.target.closest('.th-w');if(!w)return;e.preventDefault();
+   const i=+w.dataset.i;drag={start:i,m:st[i]===mode()?'':mode(),moved:false};});
+  p.addEventListener('pointerover',e=>{if(!drag)return;const w=e.target.closest('.th-w');if(!w)return;const i=+w.dataset.i;
+   if(i!==drag.start||drag.moved){if(!drag.moved){drag.moved=true;st[drag.start]=drag.m;}st[i]=drag.m;paint();}});
+  const up=()=>{if(!p.isConnected){document.removeEventListener('pointerup',up);return;}if(drag&&drag.moved)suppress=true;drag=null;};
+  document.addEventListener('pointerup',up);
+  p.addEventListener('click',e=>{if(suppress){suppress=false;return;}const w=e.target.closest('.th-w');if(!w)return;const i=+w.dataset.i,m=mode();st[i]=st[i]===m?'':m;paint();});
+  return()=>{const L=phrases('pos'),D=phrases('neg');if(!L.length&&!D.length)return{error:'Please highlight at least one word or phrase.'};
+   return{data:`QT_like=${L.length?L.map(x=>`"${x}"`).join(' | '):'none'}; QT_dislike=${D.length?D.map(x=>`"${x}"`).join(' | '):'none'}`};};
+ }},
+{id:'tblhl',short:'Table highlighter',title:'Product profile (TPP) table highlighter',
+ tags:['Cell highlighting','Reason to prescribe / concern','Built for pharma TPPs'],
+ how:'Doctors read a target product profile and mark each part as a reason to prescribe (👍) or a concern (👎). Tapping a highlighted cell again clears it. Every attribute gets its own code in the data, ready for tabulation. On phones the table stacks into labelled blocks.',
+ q:'Please read this product profile. Which parts make you more likely (👍) or less likely (👎) to prescribe it?',inst:'Pick 👍 or 👎, then tap the profile cells. Highlight at least one.',
+ build(b){
+  b.innerHTML=modeHTML+`<div class="tt-wrap"><table class="tt"><thead><tr><th>Attribute</th><th>Product X</th></tr></thead><tbody>${TPP.map(([a,v],i)=>`<tr><th scope="row">${a}</th><td><button type="button" class="tt-c" data-i="${i}" aria-pressed="false">${v}</button></td></tr>`).join('')}</tbody></table></div>`;
+  const mode=wireMode(b),st=TPP.map(()=>'');
+  b.addEventListener('click',e=>{const c=e.target.closest('.tt-c');if(!c)return;const i=+c.dataset.i,m=mode();st[i]=st[i]===m?'':m;
+   c.className='tt-c'+(st[i]?' '+st[i]:'');c.setAttribute('aria-pressed',!!st[i]);});
+  return()=>st.some(Boolean)?{data:st.map((v,i)=>`QTPPr${i+1}=${v==='pos'?1:v==='neg'?2:0}`).join('; ')}:{error:'Please highlight at least one part of the profile.'};
  }},
 {id:'openend',short:'Open-end',title:'Open-end with word count and quality checks',
  tags:['Minimum words','Character limit bar','Auto-tidy spacing','Gibberish check'],
@@ -1093,6 +1380,26 @@ const DEMOS=[
    const vowelShare=(t.match(/[aeiou]/gi)||[]).length/letters;
    if(/(.)\1{3,}/.test(t)||vowelShare<.2||/(asdf|qwer|zxcv|hjkl)/i.test(t))return{error:'This answer looks incomplete. Please describe it in your own words.'};
    return{data:`Q23="${t.length>60?t.slice(0,60)+'…':t}"`};};
+ }},
+{id:'dq',short:'Quality checks',title:'Built-in data quality checks',
+ tags:['Speeder check','Straightlining check','Attention check','Hidden quality flags'],
+ how:'Quality checks run quietly in the background. Time on the question is measured, the grid is checked for straightlining (the same answer on every row), and one row asks for a specific answer to catch inattentive respondents. Each check writes a hidden flag, so failing respondents can be terminated or replaced before they reach the data. Try it: answer fast with the same column on every row.',
+ q:'How much do you agree with each statement about the app?',inst:'Please select one answer for each row.',
+ build(b){
+  const rows=['The app is easy to use','Prices are fair','For quality purposes, please select “Disagree” for this row','Delivery is reliable','Customer support is helpful','I would recommend this app'];
+  const cols=['Strongly disagree','Disagree','Neutral','Agree','Strongly agree'],ATT=2,ATTV='2',SPEED=10,t0=Date.now();
+  b.innerHTML=gridHTML('dq',rows.map((r,i)=>['r'+(i+1),r]),cols)+'<div class="dq-rep" aria-live="polite" hidden></div>';
+  const rep=$('.dq-rep',b);
+  b.addEventListener('change',e=>{const g=e.target.closest('.grow');if(g)g.classList.remove('miss');});
+  return()=>{let miss=0;$$('.grow',b).forEach(g=>{const v=$('input:checked',g);g.classList.toggle('miss',!v);if(!v)miss++;});
+   if(miss){rep.hidden=true;return{error:`Please answer the highlighted ${miss>1?'rows':'row'}.`};}
+   const secs=Math.round((Date.now()-t0)/1000);
+   const ans=rows.map((r,i)=>$(`input[name="dqr${i+1}"]:checked`,b).value);
+   const core=ans.filter((v,i)=>i!==ATT);
+   const speeder=secs<SPEED,straight=core.every(v=>v===core[0]),att=ans[ATT]!==ATTV;
+   rep.innerHTML=[['Speed',speeder,`${secs}s`],['Straightlining',straight,''],['Attention check',att,'']].map(([n,f,x])=>`<span class="${f?'flag':'pass'}">${f?'⚑':'✓'} ${n}${x?' ('+x+')':''}: ${f?'flagged':'passed'}</span>`).join('');
+   rep.hidden=false;
+   return{data:ans.map((v,i)=>`QDr${i+1}=${v}`).join('; ')+`; QD_seconds=${secs}; QD_speeder=${+speeder}; QD_straightline=${+straight}; QD_attention_fail=${+att}`};};
  }}
 ];
 
@@ -1129,6 +1436,12 @@ DEMOS.forEach((d,i)=>{
   init();
 });
 
+/* Light / dark theme switch (light by default, remembered per viewer) */
+const themeBtn=$('#themeBtn');
+const applyTheme=t=>{document.documentElement.dataset.theme=t;themeBtn.textContent=t==='dark'?'☀️':'🌙';themeBtn.setAttribute('aria-label',t==='dark'?'Switch to light theme':'Switch to dark theme');try{localStorage.setItem('pf-theme',t);}catch(e){}};
+applyTheme(document.documentElement.dataset.theme==='dark'?'dark':'light');
+themeBtn.addEventListener('click',()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+
 /* Global desktop / mobile switch */
 const gmode=$('#gmode');
 const paintG=m=>$$('button',gmode).forEach(x=>x.setAttribute('aria-pressed',x.dataset.mode===m));
@@ -1145,14 +1458,19 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return
 $$('.demo').forEach(s=>io.observe(s));io.observe($('#contact'));
 if(location.hash){const t=document.getElementById(location.hash.slice(1));if(t)setTimeout(()=>t.scrollIntoView(),50);}
 
-/* Image gallery popup for a.zoomable links */
-const lb=$('#lb'),lbImg=$('img',lb),lbCap=$('.lb-cap',lb);let gal=[],gi=0,lastFocus=null;
-function show(i){gi=(i+gal.length)%gal.length;const a=gal[gi];
-  lbImg.src=a.getAttribute('href');lbImg.alt=a.dataset.caption||'';
+/* One popup for a.zoomable links: images, videos and HTML content */
+const lb=$('#lb'),stage=$('.lb-stage',lb),lbCap=$('.lb-cap',lb);let gal=[],gi=0,lastFocus=null,player=null;
+function markSeen(a){a.classList.add('seen');const z=$('.zm',a);if(z)z.textContent='✓ Viewed';}
+function show(i){if(player){player.stop();player=null;}
+  gi=(i+gal.length)%gal.length;const a=gal[gi],ty=a.dataset.type||'image';stage.innerHTML='';
+  if(ty==='video'){player=makePlayer(a);stage.appendChild(player);player.play();}
+  else if(ty==='html'){const tpl=document.getElementById(a.dataset.src),d=document.createElement('div');d.className='lb-html';if(tpl)d.appendChild(tpl.content.cloneNode(true));stage.appendChild(d);markSeen(a);}
+  else{const im=document.createElement('img');im.src=a.getAttribute('href');im.alt=a.dataset.caption||'';stage.appendChild(im);markSeen(a);
+    let sx=null;im.addEventListener('pointerdown',e=>{sx=e.clientX;});
+    im.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>50)show(gi+(dx<0?1:-1));});}
   lbCap.textContent=`${a.dataset.caption||''} (${gi+1} of ${gal.length})`;
-  a.classList.add('seen');const z=$('.zm',a);if(z)z.textContent='✓ Viewed';
   $('.lb-prev',lb).hidden=$('.lb-next',lb).hidden=gal.length<2;}
-function closeLb(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true');if(lastFocus)lastFocus.focus();}
+function closeLb(){if(player){player.stop();player=null;}lb.classList.remove('open');lb.setAttribute('aria-hidden','true');stage.innerHTML='';if(lastFocus)lastFocus.focus();}
 document.addEventListener('click',e=>{const a=e.target.closest('a.zoomable');if(!a)return;e.preventDefault();
   lastFocus=a;const g=a.dataset.gallery,scope=a.closest('.qbody')||document;
   gal=g?$$(`a.zoomable[data-gallery="${g}"]`,scope):[a];
@@ -1160,12 +1478,9 @@ document.addEventListener('click',e=>{const a=e.target.closest('a.zoomable');if(
 $('.lb-close',lb).addEventListener('click',closeLb);
 $('.lb-prev',lb).addEventListener('click',()=>show(gi-1));
 $('.lb-next',lb).addEventListener('click',()=>show(gi+1));
-lb.addEventListener('click',e=>{if(e.target===lb)closeLb();});
+lb.addEventListener('click',e=>{if(e.target===lb||e.target===stage)closeLb();});
 document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;
   if(e.key==='Escape')closeLb();if(e.key==='ArrowLeft')show(gi-1);if(e.key==='ArrowRight')show(gi+1);});
-let sx=null;
-lbImg.addEventListener('pointerdown',e=>{sx=e.clientX;});
-lbImg.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>50)show(gi+(dx<0?1:-1));});
 </script>
 </body>
 </html>
