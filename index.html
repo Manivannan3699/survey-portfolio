@@ -86,7 +86,7 @@ main{padding-bottom:20px}
 
 /* Preview stage: desktop screen or phone frame */
 .stage{overflow-x:auto;padding:2px 0 10px}
-.frame{container:sv / inline-size;margin:0 auto}
+.frame{container:sv / inline-size;margin:0 auto;width:100%;transition:width .45s cubic-bezier(.2,.8,.2,1),padding .45s,border-radius .45s,background-color .45s}
 .stage[data-mode="desktop"] .frame{min-width:740px}
 .stage[data-mode="mobile"] .frame{width:390px;max-width:100%;padding:12px 10px 16px;border-radius:36px;background:#1c2431;box-shadow:var(--shadow)}
 .stage[data-mode="mobile"] .frame::before{content:"";display:block;width:64px;height:5px;border-radius:3px;background:#4a586c;margin:2px auto 12px}
@@ -439,6 +439,39 @@ input:focus-visible+.fir{outline:2px solid var(--brand);outline-offset:2px}
 .vp-bar span{display:block;height:100%;width:0;background:#3ec1a6}
 .vp-time{font-size:.85rem;font-variant-numeric:tabular-nums}
 
+/* Special effects */
+.hero-wrap{position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.hero-bg span{position:absolute;border-radius:50%;filter:blur(60px);opacity:.33;animation:drift 18s ease-in-out infinite alternate}
+.hero-bg span:nth-child(1){width:380px;height:380px;background:var(--brand);top:-140px;left:-90px}
+.hero-bg span:nth-child(2){width:320px;height:320px;background:var(--accent);top:30px;right:-80px;animation-duration:23s}
+.hero-bg span:nth-child(3){width:280px;height:280px;background:#3ec1a6;bottom:-150px;left:38%;animation-duration:27s}
+:root[data-theme="dark"] .hero-bg span{opacity:.22}
+@keyframes drift{to{transform:translate(70px,40px) scale(1.18)}}
+.hero{position:relative;z-index:1}
+.typer{font-weight:600;color:var(--brand);margin:-8px 0 16px;min-height:1.5em}
+.caret{display:inline-block;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.stats{display:flex;flex-wrap:wrap;gap:24px;margin:0 0 18px}
+.stats b{display:block;font-family:"Bricolage Grotesque","Source Sans 3",system-ui,sans-serif;font-size:2.1rem;font-weight:800;line-height:1;color:var(--brand)}
+.stats span{font-size:.85rem;color:var(--muted)}
+.demo.rv{opacity:0;transform:translateY(28px)}
+.demo.rv.in{opacity:1;transform:none;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.next,.addl{position:relative;overflow:hidden}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.38);transform:scale(0);animation:ripple .6s ease-out;pointer-events:none}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
+.ok:not([hidden]){animation:pop .35s ease-out}
+.err:not([hidden]){animation:shake .35s ease-in-out}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.confetti{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:300}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+
+/* Multi-language demo */
+.ml-tot{display:flex;flex-direction:column;align-items:flex-end}
+.ml-st{font-size:.8rem;font-weight:600;color:var(--accent)}
+.as-total.good .ml-st{color:var(--ok)}
+[dir="rtl"] .qinst{font-style:normal}
+
 /* Slider */
 .sl-track{position:relative;padding-top:38px}
 .sl-val{position:absolute;top:0;transform:translateX(-50%);background:var(--brand);color:var(--brand-ink);font-weight:700;padding:2px 10px;border-radius:6px;font-size:.9rem;white-space:nowrap}
@@ -599,11 +632,14 @@ footer p{margin:0 0 6px}
 </head>
 <body>
 
+<div class="hero-wrap"><div class="hero-bg" aria-hidden="true"><span></span><span></span><span></span></div>
 <header class="hero">
   <div>
     <h1>Manivannan K</h1>
     <p class="role">Senior survey programmer for Decipher (Forsta)</p>
+    <p class="typer" aria-hidden="true">I build <span id="typer"></span><span class="caret">▍</span></p>
     <p class="summary">I program market research surveys end to end: custom question types, skip logic and quotas, answer validation, and layouts built for both desktop and phone. Every question on this page is live. Switch any of them between desktop and mobile view, answer it, and see the data it records.</p>
+    <div class="stats"><div><b data-count="demos">0</b><span>live question types</span></div><div><b data-count="6">0</b><span>languages, incl. right-to-left</span></div><div><b data-count="2">0</b><span>views: desktop and mobile</span></div></div>
     <ul class="skills">
       <li>Decipher / Forsta XML</li>
       <li>Custom JS, CSS and HTML question types</li>
@@ -625,7 +661,7 @@ footer p{margin:0 0 6px}
       <a class="opt" href="#contact"><span class="fir" aria-hidden="true"></span><span class="lbl">Tell me what your survey needs</span><span class="arrow" aria-hidden="true">›</span></a>
     </div>
   </div>
-</header>
+</header></div>
 
 <div class="navbar">
   <div class="seg" id="gmode" role="group" aria-label="Preview all questions as">
@@ -668,6 +704,17 @@ footer p{margin:0 0 6px}
 <script>
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function confetti(x,y){if(reduceMotion)return;
+  const c=document.createElement('canvas'),dpr=window.devicePixelRatio||1;c.className='confetti';c.width=innerWidth*dpr;c.height=innerHeight*dpr;document.body.appendChild(c);
+  const g=c.getContext('2d');if(!g){c.remove();return;}g.scale(dpr,dpr);
+  const cols=['#1f5fae','#b9770e','#3ec1a6','#f2b134','#e2557a','#6d3c8f'];
+  const ps=[...Array(70)].map(()=>({x,y,vx:(Math.random()-.5)*10,vy:-Math.random()*9-3,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,w:6+Math.random()*5,h:3+Math.random()*4,c:cols[Math.floor(Math.random()*cols.length)]}));
+  const t0=performance.now();
+  const step=ts=>{const el=ts-t0;g.clearRect(0,0,innerWidth,innerHeight);
+    ps.forEach(p=>{p.vy+=.28;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=p.vr;g.save();g.globalAlpha=Math.max(0,1-el/1400);g.translate(p.x,p.y);g.rotate(p.r);g.fillStyle=p.c;g.fillRect(-p.w/2,-p.h/2,p.w,p.h);g.restore();});
+    if(el<1400)requestAnimationFrame(step);else c.remove();};
+  requestAnimationFrame(step);}
 function optRow(type,name,value,label,extra,cls){
   return `<label class="opt${cls?' '+cls:''}"><input type="${type}" name="${name}" value="${value}"><span class="fir" aria-hidden="true"></span><span class="lbl">${label}</span>${extra||''}</label>`;
 }
@@ -977,6 +1024,35 @@ const DEMOS=[
     $('.zs-msg',b).innerHTML=txt('popupMsg1','It looks like you haven’t entered any values for: ')+zeros.map(ci=>cols[ci].l).join(', ')+txt('popupMsg2','.<br>Do you want to go back and fill them in, or continue as is?');
     cur=sc.indexOf(zeros[0]);showCard();zs.hidden=false;$('.zs-go',b).focus();return{advance:true};}
    return{data:data()};};
+ }},
+{id:'lang',short:'Multi-language',title:'Multi-language survey with right-to-left support',
+ tags:['6 languages','Arabic right-to-left','Text from language resources','Nothing hard-coded'],
+ how:'Every word a respondent sees, including the total, the live status and the error message, comes from a language object filled per country (in Decipher, from res tags), so the same question runs in any language without touching the code. Pick a language below: Arabic also flips the whole layout right to left, and Hindi and Tamil show non-Latin scripts working.',
+ q:'',inst:'',
+ build(b){
+  const L={
+   en:{name:'English',q:'Thinking about your last 100 grocery purchases, roughly what percentage came from each place?',inst:'Your answers must add up to 100%.',rows:['Supermarket','Neighbourhood store','Online or app','Other'],total:'Total',left:'{n} left',over:'{n} over',err:'Your answers must add up to 100%. Current total: {n}%',cont:'Continue',reset:'Reset'},
+   es:{name:'Español',q:'Pensando en tus últimas 100 compras de supermercado, ¿qué porcentaje aproximado hiciste en cada lugar?',inst:'Tus respuestas deben sumar 100%.',rows:['Supermercado','Tienda de barrio','En línea o app','Otro'],total:'Total',left:'Faltan {n}',over:'{n} de más',err:'Tus respuestas deben sumar 100%. Total actual: {n}%',cont:'Continuar',reset:'Restablecer'},
+   fr:{name:'Français',q:'En pensant à vos 100 derniers achats alimentaires, quel pourcentage environ provenait de chaque endroit\u00a0?',inst:'Vos réponses doivent totaliser 100\u00a0%.',rows:['Supermarché','Commerce de proximité','En ligne ou application','Autre'],total:'Total',left:'Il reste {n}',over:'{n} en trop',err:'Vos réponses doivent totaliser 100\u00a0%. Total actuel\u00a0: {n}\u00a0%',cont:'Continuer',reset:'Réinitialiser'},
+   ar:{name:'العربية',rtl:true,q:'بالتفكير في آخر 100 عملية شراء للبقالة قمت بها، ما النسبة التقريبية التي جاءت من كل مكان؟',inst:'يجب أن يكون مجموع إجاباتك 100%.',rows:['سوبر ماركت','متجر الحي','عبر الإنترنت أو التطبيق','أخرى'],total:'المجموع',left:'متبقٍ {n}',over:'زيادة {n}',err:'يجب أن يكون مجموع إجاباتك 100%. المجموع الحالي: {n}%',cont:'متابعة',reset:'إعادة تعيين'},
+   hi:{name:'हिन्दी',q:'अपनी पिछली 100 किराना खरीदारियों के बारे में सोचें। लगभग कितने प्रतिशत खरीदारी हर जगह से हुई?',inst:'आपके उत्तरों का कुल योग 100% होना चाहिए।',rows:['सुपरमार्केट','पड़ोस की दुकान','ऑनलाइन या ऐप','अन्य'],total:'कुल',left:'{n} बाकी',over:'{n} ज़्यादा',err:'आपके उत्तरों का कुल योग 100% होना चाहिए। वर्तमान कुल: {n}%',cont:'आगे बढ़ें',reset:'रीसेट करें'},
+   ta:{name:'தமிழ்',q:'உங்கள் கடைசி 100 மளிகைப் பொருள் வாங்குதல்களைப் பற்றி யோசியுங்கள். ஒவ்வொரு இடத்திலிருந்தும் தோராயமாக எத்தனை சதவீதம் வாங்கினீர்கள்?',inst:'உங்கள் பதில்களின் மொத்தம் 100% ஆக இருக்க வேண்டும்.',rows:['சூப்பர் மார்க்கெட்','அருகிலுள்ள கடை','ஆன்லைன் அல்லது ஆப்','மற்றவை'],total:'மொத்தம்',left:'இன்னும் {n}',over:'{n} அதிகம்',err:'உங்கள் பதில்களின் மொத்தம் 100% ஆக இருக்க வேண்டும். தற்போதைய மொத்தம்: {n}%',cont:'தொடரவும்',reset:'மீட்டமை'}};
+  const sv=b.closest('.survey'),qt=$('.qtext',sv),qi=$('.qinst',sv),nb=$('.sv-foot .next',sv),rb=$('.sv-foot .reset',sv);
+  let code='en';const vals=['','','',''];
+  const fill=(t,n)=>t.replace('{n}',n),sum=()=>vals.reduce((a,v)=>a+(+v||0),0);
+  b.innerHTML=ctl('Language',Object.entries(L).map(([k,v])=>[k,v.name]),'en','lng')+'<div class="mlq"></div>';
+  const box=$('.mlq',b);
+  const paint=()=>{var lang=L[code];const s=sum(),t=$('.as-total',box);$('.tv',t).textContent=s+'%';
+   t.classList.toggle('good',s===100);t.classList.toggle('bad',s!==100);
+   $('.ml-st',t).textContent=s===100?'✓':s<100?fill(lang.left,100-s):fill(lang.over,s-100);};
+  const draw=()=>{var lang=L[code];var txtTotal=lang.total||'Total';
+   sv.dir=lang.rtl?'rtl':'ltr';sv.lang=code;qt.textContent=lang.q;qi.textContent=lang.inst;nb.textContent=lang.cont+(lang.rtl?' «':' »');rb.textContent=lang.reset;
+   box.innerHTML=`<div class="as">${lang.rows.map((r,i)=>`<div class="as-row"><label for="mlq${i}">${r}</label><span class="as-in"><input class="num" id="mlq${i}" inputmode="numeric" maxlength="3" autocomplete="off" dir="ltr" value="${vals[i]}"><span>%</span></span></div>`).join('')}<div class="as-row as-total"><span>${txtTotal}</span><span class="ml-tot"><span class="tv"></span><span class="ml-st"></span></span></div></div>`;
+   paint();};
+  box.addEventListener('input',e=>{const t=e.target;if(!t.classList.contains('num'))return;t.value=t.value.replace(/\D/g,'').slice(0,3);vals[+t.id.slice(3)]=t.value;paint();});
+  onCtl(b,'lng',v=>{code=v;draw();$('.err',sv).hidden=true;});
+  draw();
+  return()=>{const s=sum();if(s!==100)return{error:fill(L[code].err,s)};return{data:`lang=${code}; `+vals.map((v,i)=>`QLr${i+1}=${v===''?'blank':v}`).join('; ')};};
  }},
 {id:'vw',short:'Van Westendorp',title:'Van Westendorp price questions with live checks',
  tags:['Price sensitivity','Each price above the last','Live error messages','Thousands separators'],
@@ -1424,14 +1500,15 @@ DEMOS.forEach((d,i)=>{
   $('.viewbar .seg',s).addEventListener('click',e=>{const x=e.target.closest('button');if(x)setStage(s,x.dataset.mode);});
   const err=$('.err',s),ok=$('.ok',s);let body,validate;
   const nextBtn=$('.sv-foot .next',s);
-  const api={accept(data){err.hidden=true;$('code',ok).textContent=data;ok.hidden=false;},gate(on){nextBtn.style.display=on?'':'none';}};
+  const celebrate=()=>{const rc=nextBtn.getBoundingClientRect();confetti(rc.left+rc.width/2,rc.top+rc.height/2);};
+  const api={accept(data){err.hidden=true;$('code',ok).textContent=data;ok.hidden=false;celebrate();},gate(on){nextBtn.style.display=on?'':'none';}};
   const init=()=>{const nb=document.createElement('div');nb.className='qbody';
     if(body)body.replaceWith(nb);else $('.q',s).appendChild(nb);
     body=nb;nextBtn.style.display='';validate=d.build(body,api);err.hidden=true;ok.hidden=true;};
   nextBtn.addEventListener('click',()=>{const r=validate();
-    if(r.error){err.textContent=r.error;err.hidden=false;ok.hidden=true;err.scrollIntoView({block:'nearest',behavior:'smooth'});return;}
+    if(r.error){err.textContent=r.error;err.hidden=false;err.style.animation='none';void err.offsetWidth;err.style.animation='';ok.hidden=true;err.scrollIntoView({block:'nearest',behavior:'smooth'});return;}
     err.hidden=true;
-    if(r.data){$('code',ok).textContent=r.data;ok.hidden=false;}});
+    if(r.data){$('code',ok).textContent=r.data;ok.hidden=false;celebrate();}});
   $('.reset',s).addEventListener('click',init);
   init();
 });
@@ -1440,7 +1517,30 @@ DEMOS.forEach((d,i)=>{
 const themeBtn=$('#themeBtn');
 const applyTheme=t=>{document.documentElement.dataset.theme=t;themeBtn.textContent=t==='dark'?'☀️':'🌙';themeBtn.setAttribute('aria-label',t==='dark'?'Switch to light theme':'Switch to dark theme');try{localStorage.setItem('pf-theme',t);}catch(e){}};
 applyTheme(document.documentElement.dataset.theme==='dark'?'dark':'light');
-themeBtn.addEventListener('click',()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+themeBtn.addEventListener('click',e=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';
+  if(!document.startViewTransition||reduceMotion){applyTheme(next);return;}
+  const x=e.clientX||innerWidth-30,y=e.clientY||30,R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+  const vt=document.startViewTransition(()=>applyTheme(next));
+  vt.ready.then(()=>{document.documentElement.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${R}px at ${x}px ${y}px)`]},{duration:550,easing:'ease-out',pseudoElement:'::view-transition-new(root)'});}).catch(()=>{});});
+
+/* Effects: scroll reveal, button ripple, typewriter, count-up */
+if(!reduceMotion&&'IntersectionObserver' in window){
+  const items=$$('.demo,.cta');items.forEach(d=>d.classList.add('rv'));
+  const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target);}}),{threshold:.04});
+  items.forEach(d=>ro.observe(d));}
+document.addEventListener('pointerdown',e=>{const btn=e.target.closest('.next,.addl');if(!btn||reduceMotion)return;
+  const r=btn.getBoundingClientRect(),d=Math.max(r.width,r.height)*2,sp=document.createElement('span');sp.className='ripple';
+  sp.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;btn.appendChild(sp);setTimeout(()=>sp.remove(),650);});
+(()=>{const el=$('#typer');if(!el)return;
+  const P=['custom grids','autosum with card view','click and drag ranking','patient charts','TPP highlighters','built-in quality checks','multi-language surveys'];
+  if(reduceMotion){el.textContent=P[0];return;}
+  let i=0,j=0,del=false;
+  const tick=()=>{const w=P[i];if(!del){j++;el.textContent=w.slice(0,j);if(j===w.length){del=true;setTimeout(tick,1600);return;}}
+    else{j--;el.textContent=w.slice(0,j);if(j===0){del=false;i=(i+1)%P.length;}}setTimeout(tick,del?32:70);};
+  tick();})();
+$$('[data-count]').forEach(el=>{const n=el.dataset.count==='demos'?DEMOS.length:+el.dataset.count;
+  if(reduceMotion){el.textContent=n;return;}const t0=performance.now();
+  const f=ts=>{const pr=Math.min((ts-t0)/1300,1);el.textContent=Math.round(n*(1-Math.pow(1-pr,3)));if(pr<1)requestAnimationFrame(f);};requestAnimationFrame(f);});
 
 /* Global desktop / mobile switch */
 const gmode=$('#gmode');
